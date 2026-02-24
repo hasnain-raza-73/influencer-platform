@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /Users/hasnainraza/Desktop/My\\ Stores/influencer-platform/packages/backend && npm run start:dev:*)",
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "Bash(kill:*)",
+      "Bash(npm run migration:run:*)",
+      "Bash(node -e:*)",
+      "Bash(NODE_ENV=test DATABASE_NAME=influencer_platform_test npm run migration:run)",
+      "Bash(NODE_ENV=test npm run test:e2e)",
+      "Bash(npx create-next-app:*)",
+      "Bash(cd:*)",
+      "Bash(psql:*)",
+      "Bash(cd /Users/hasnainraza/Desktop/My\\ Stores/influencer-platform/packages/web && npm install:*)",
+      "Bash(npm install:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(xargs ls:*)",
+      "Bash(npm run build:*)",
+      "Bash(cat:*)",
+      "Bash(lsof:*)",
+      "Bash(node --version)",
+      "Bash(npm run seed:admin:*)",
+      "Bash(xargs kill:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

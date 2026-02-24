@@ -1,0 +1,86 @@
+# Mobile App (React Native)
+
+## Tech Stack
+- React Native 0.72
+- TypeScript
+- React Navigation
+- React Query (server state)
+- Zustand (client state)
+- Firebase Cloud Messaging
+
+## Component Guidelines
+
+### File Structure
+```
+ComponentName/
+├── index.tsx          # Component logic
+├── styles.ts          # Styled components
+└── types.ts           # Type definitions
+```
+
+### Component Best Practices
+- Use functional components with hooks only
+- Keep components under 200 lines
+- Extract logic into custom hooks
+- Use TypeScript for all props and state
+- Handle loading, error, and empty states
+- Use React.memo for expensive components
+
+### State Management
+- **Server State**: Use React Query for all API data
+- **Client State**: Use Zustand for auth, UI state, notifications
+- **Form State**: Use react-hook-form with zod validation
+
+### API Calls
+```typescript
+// Good: Use React Query
+const { data, isLoading, error } = useQuery({
+  queryKey: ['products', filters],
+  queryFn: () => productsApi.getProducts(filters),
+  staleTime: 5 * 60 * 1000,
+});
+
+// Bad: Direct useState + useEffect
+```
+
+### Navigation
+- Use TypeScript for navigation types
+- Keep navigation logic in navigators
+- Use deep linking for shareable content
+
+### Performance
+- Lazy load images with placeholder
+- Use FlatList for long lists (not ScrollView)
+- Memoize callbacks with useCallback
+- Debounce search inputs
+- Optimize re-renders with React.memo
+
+### Testing
+- Write tests for:
+  - Complex business logic
+  - Custom hooks
+  - Utility functions
+- Use React Native Testing Library
+
+### Code Style
+- Use named exports (not default)
+- Destructure props
+- Use early returns
+- Avoid nested ternaries
+- Keep JSX readable
+
+## Prohibited
+- ❌ Class components
+- ❌ Direct Redux (use Zustand)
+- ❌ Inline styles (use styles.ts)
+- ❌ Any type (use proper types)
+- ❌ console.log in production
+- ❌ Hardcoded colors/sizes (use constants)
+
+## Critical Features
+- Handle offline scenarios
+- Support pull-to-refresh
+- Implement deep linking
+- Show loading indicators
+- Handle errors gracefully
+- Respect native UI patterns

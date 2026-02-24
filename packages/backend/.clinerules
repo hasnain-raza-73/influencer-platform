@@ -1,0 +1,109 @@
+# Backend API (NestJS)
+
+## Architecture
+- Modular structure (one module per domain)
+- Dependency injection
+- Repository pattern with TypeORM
+- DTOs for validation
+- Interceptors for transformation
+
+## Code Organization
+```
+src/
+├── modules/          # Feature modules
+│   └── products/
+│       ├── products.module.ts
+│       ├── products.controller.ts
+│       ├── products.service.ts
+│       ├── entities/
+│       └── dto/
+├── common/           # Shared code
+└── database/         # Migrations
+```
+
+## Best Practices
+
+### Controllers
+- Keep thin (delegate to services)
+- Use DTOs for request validation
+- Use guards for auth
+- Use interceptors for response transformation
+- Document with Swagger decorators
+
+### Services
+- Business logic lives here
+- Use transactions for multi-step operations
+- Handle errors with custom exceptions
+- Log important operations
+- Don't expose entities directly
+
+### Entities
+- Use TypeORM decorators
+- Define relations properly
+- Use soft delete where appropriate
+- Index foreign keys
+- Document complex fields
+
+### DTOs
+- Use class-validator for validation
+- Separate create/update DTOs
+- Use PartialType for partial updates
+- Transform types with class-transformer
+
+### Critical Rules
+- **Tracking System**: Never trust client timestamps
+- **Conversions**: Always use database transactions
+- **Commission**: Log all calculations
+- **API Keys**: Validate webhook signatures
+- **Passwords**: Always hash with bcrypt (min 10 rounds)
+- **Pagination**: Max 100 items per page
+- **Rate Limiting**: Apply to all public endpoints
+
+### Database
+- Use migrations for all schema changes
+- Never delete tracking/conversion data (soft delete)
+- Use prepared statements (TypeORM default)
+- Index all query columns
+- Cache frequently accessed data
+
+### Security
+- Validate all inputs
+- Sanitize user content
+- Use parameterized queries
+- Rate limit endpoints
+- Hash sensitive data
+- Never expose stack traces
+- Rotate secrets regularly
+
+### Performance
+- Cache analytics (5-15 min)
+- Lazy load relations
+- Use select to limit columns
+- Paginate all lists
+- Use Redis for sessions
+- Compress responses
+
+### Testing
+- Unit tests for services
+- Integration tests for controllers
+- E2E tests for critical flows
+- Mock external services
+- Test error scenarios
+
+## Prohibited
+- ❌ console.log (use logger)
+- ❌ Synchronous operations
+- ❌ Exposing internal IDs in URLs
+- ❌ Direct database queries (use repositories)
+- ❌ Committing .env files
+- ❌ Bypassing validation
+- ❌ Trusting client data for conversions
+
+## Critical Features
+- Validate webhooks with API keys
+- Log all tracking events
+- Use transactions for financial operations
+- Cache analytics aggressively
+- Handle race conditions
+- Implement fraud detection
+- Monitor error rates
