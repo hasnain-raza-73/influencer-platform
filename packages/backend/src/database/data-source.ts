@@ -18,4 +18,10 @@ export const AppDataSource = new DataSource({
   synchronize: false, // Always use migrations in production
   logging: process.env.NODE_ENV === 'development',
   ssl: process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : false,
+  extra: {
+    // Connection pool settings for production
+    max: 10, // Maximum connections in pool
+    connectionTimeoutMillis: 10000, // 10 seconds
+    idleTimeoutMillis: 30000, // 30 seconds
+  },
 });
