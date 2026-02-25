@@ -12,10 +12,15 @@ async function bootstrap() {
   app.use(cookieParser());
   
   // CORS - Allow both web and mobile frontends
+  const corsOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
+    : [];
+
   const allowedOrigins = [
-    'http://localhost:3001', // Web frontend
+    'http://localhost:3001', // Web frontend (development)
     'http://localhost:19006', // Mobile frontend (Expo)
     process.env.FRONTEND_URL,
+    ...corsOrigins,
   ].filter((origin): origin is string => Boolean(origin));
 
   app.enableCors({
@@ -35,9 +40,10 @@ async function bootstrap() {
   app.setGlobalPrefix('v1');
   
   const port = process.env.PORT || 3000;
-  await app.listen(port);
-  
-  console.log(`🚀 Server running on http://localhost:${port}/v1`);
+  // Listen on 0.0.0.0 to accept connections from anywhere (required for cloud platforms)
+  await app.listen(port, '0.0.0.0');
+
+  console.log(`🚀 Server running on port ${port}/v1`);
 }
 
 bootstrap();
