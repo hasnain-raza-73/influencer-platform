@@ -1,7 +1,10 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
-import { Campaign, CampaignStatus } from './entities/campaign.entity';
+import { Repository, Like, In } from 'typeorm';
+import { Campaign, CampaignStatus, CampaignType } from './entities/campaign.entity';
+import { CampaignInvitation, InvitationStatus } from './entities/campaign-invitation.entity';
+import { TrackingLink } from '../tracking/entities/tracking-link.entity';
+import { Click } from '../tracking/entities/click.entity';
 import { CreateCampaignDto } from './dto/create-campaign.dto';
 import { UpdateCampaignDto } from './dto/update-campaign.dto';
 import { CampaignFilterDto } from './dto/campaign-filter.dto';
@@ -11,6 +14,12 @@ export class CampaignsService {
   constructor(
     @InjectRepository(Campaign)
     private readonly campaignRepository: Repository<Campaign>,
+    @InjectRepository(CampaignInvitation)
+    private readonly invitationRepository: Repository<CampaignInvitation>,
+    @InjectRepository(TrackingLink)
+    private readonly trackingLinkRepository: Repository<TrackingLink>,
+    @InjectRepository(Click)
+    private readonly clickRepository: Repository<Click>,
   ) {}
 
   // Create a new campaign
@@ -54,17 +63,53 @@ export class CampaignsService {
   }
 
   // Get active campaigns (for influencers to browse)
-  async findActiveCampaigns(): Promise<Campaign[]> {
+  // Returns OPEN campaigns + SPECIFIC campaigns with accepted invitation
+  async findActiveCampaigns(influencerId?: string): Promise<Campaign[]> {
     const now = new Date();
 
-    return this.campaignRepository
+    const queryBuilder = this.campaignRepository
       .createQueryBuilder('campaign')
       .where('campaign.status = :status', { status: CampaignStatus.ACTIVE })
       .andWhere('(campaign.start_date IS NULL OR campaign.start_date <= :now)', { now })
       .andWhere('(campaign.end_date IS NULL OR campaign.end_date >= :now)', { now })
-      .leftJoinAndSelect('campaign.brand', 'brand')
-      .orderBy('campaign.created_at', 'DESC')
-      .getMany();
+      .leftJoinAndSelect('campaign.brand', 'brand');
+
+    if (influencerId) {
+      // Get campaigns that are:
+      // 1. OPEN campaigns (accessible to all)
+      // 2. SPECIFIC campaigns where influencer has accepted invitation
+      const acceptedInvitations = await this.invitationRepository.find({
+        where: {
+          influencer_id: influencerId,
+          status: InvitationStatus.ACCEPTED,
+        },
+        select: ['campaign_id'],
+      });
+
+      const acceptedCampaignIds = acceptedInvitations.map((inv) => inv.campaign_id);
+
+      if (acceptedCampaignIds.length > 0) {
+        queryBuilder.andWhere(
+          '(campaign.campaign_type = :openType OR campaign.id IN (:...acceptedIds))',
+          {
+            openType: CampaignType.OPEN,
+            acceptedIds: acceptedCampaignIds,
+          },
+        );
+      } else {
+        // Only show OPEN campaigns if no accepted invitations
+        queryBuilder.andWhere('campaign.campaign_type = :openType', {
+          openType: CampaignType.OPEN,
+        });
+      }
+    } else {
+      // If no influencer specified, only return OPEN campaigns
+      queryBuilder.andWhere('campaign.campaign_type = :openType', {
+        openType: CampaignType.OPEN,
+      });
+    }
+
+    return queryBuilder.orderBy('campaign.created_at', 'DESC').getMany();
   }
 
   // Get a single campaign
@@ -182,6 +227,36 @@ export class CampaignsService {
       ? (budgetSpent / Number(campaign.budget)) * 100
       : 0;
 
+    // Get device type distribution from tracking links clicks
+    const trackingLinks = campaign.target_product_ids && campaign.target_product_ids.length > 0
+      ? await this.trackingLinkRepository.find({
+          where: { product_id: In(campaign.target_product_ids) },
+          relations: ['clicks'],
+        })
+      : []; // No products means no tracking links
+
+    const deviceCounts: Record<string, number> = {};
+    let totalDeviceClicks = 0;
+
+    for (const link of trackingLinks) {
+      const linkId = link.id;
+      const clicks = await this.clickRepository.find({
+        where: { tracking_link_id: linkId },
+      });
+
+      for (const click of clicks) {
+        const device = click.device_type || 'unknown';
+        deviceCounts[device] = (deviceCounts[device] || 0) + 1;
+        totalDeviceClicks++;
+      }
+    }
+
+    const device_distribution = Object.entries(deviceCounts).map(([device_type, clicks]) => ({
+      device_type,
+      clicks,
+      percentage: totalDeviceClicks > 0 ? (clicks / totalDeviceClicks) * 100 : 0,
+    }));
+
     return {
       campaign_id: campaign.id,
       campaign_name: campaign.name,
@@ -201,6 +276,7 @@ export class CampaignsService {
       conversions_remaining: campaign.max_conversions
         ? campaign.max_conversions - campaign.total_conversions
         : null,
+      device_distribution,
     };
   }
 
@@ -211,6 +287,29 @@ export class CampaignsService {
     // Check if campaign is active
     if (campaign.status !== CampaignStatus.ACTIVE) {
       return { eligible: false, reason: 'Campaign is not active' };
+    }
+
+    // Check campaign type and invitation status
+    if (campaign.campaign_type === CampaignType.SPECIFIC) {
+      const invitation = await this.invitationRepository.findOne({
+        where: {
+          campaign_id: campaignId,
+          influencer_id: influencerId,
+        },
+      });
+
+      if (!invitation) {
+        return { eligible: false, reason: 'You have not been invited to this campaign' };
+      }
+
+      if (invitation.status !== InvitationStatus.ACCEPTED) {
+        return {
+          eligible: false,
+          reason: invitation.status === InvitationStatus.PENDING
+            ? 'You must accept the invitation first'
+            : 'You declined this campaign invitation',
+        };
+      }
     }
 
     // Check date range
@@ -233,7 +332,7 @@ export class CampaignsService {
       return { eligible: false, reason: 'Campaign has reached maximum conversions' };
     }
 
-    // Check if specific influencers are targeted
+    // Check if specific influencers are targeted (legacy field, still supported)
     if (campaign.target_influencer_ids && campaign.target_influencer_ids.length > 0) {
       if (!campaign.target_influencer_ids.includes(influencerId)) {
         return { eligible: false, reason: 'You are not included in this campaign' };

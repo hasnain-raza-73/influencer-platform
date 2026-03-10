@@ -15,6 +15,8 @@ import {
   ShieldCheck,
   ArrowLeftRight,
   BarChart3,
+  Mail,
+  Share2,
 } from 'lucide-react'
 
 interface NavItem {
@@ -33,12 +35,16 @@ export function Sidebar() {
     { name: 'Products', href: '/brand/products', icon: Package },
     { name: 'Campaigns', href: '/brand/campaigns', icon: Target },
     { name: 'Find Influencers', href: '/brand/influencers', icon: Users },
+    { name: 'Messages', href: '/brand/messages', icon: Mail },
     { name: 'Settings', href: '/settings', icon: Settings },
   ]
 
   const influencerNavItems: NavItem[] = [
     { name: 'Dashboard', href: '/influencer/dashboard', icon: LayoutDashboard },
     { name: 'Campaigns', href: '/influencer/campaigns', icon: Target },
+    { name: 'Invitations', href: '/influencer/invitations', icon: Mail },
+    { name: 'Messages', href: '/influencer/messages', icon: Mail },
+    { name: 'Social Accounts', href: '/influencer/settings/social-accounts', icon: Share2 },
     { name: 'Tracking Links', href: '/influencer/tracking-links', icon: LinkIcon },
     { name: 'Payouts', href: '/influencer/payouts', icon: DollarSign },
     { name: 'Settings', href: '/settings', icon: Settings },
@@ -49,6 +55,7 @@ export function Sidebar() {
     { name: 'Reports', href: '/admin/reports', icon: BarChart3 },
     { name: 'Brands', href: '/admin/brands', icon: ShieldCheck },
     { name: 'Influencers', href: '/admin/influencers', icon: Users },
+    { name: 'Social Accounts', href: '/admin/social-accounts', icon: Share2 },
     { name: 'Campaigns', href: '/admin/campaigns', icon: Target },
     { name: 'Product Reviews', href: '/admin/products', icon: Package },
     { name: 'Payouts', href: '/admin/payouts', icon: DollarSign },

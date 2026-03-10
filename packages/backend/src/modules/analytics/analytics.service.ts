@@ -134,6 +134,11 @@ export class AnalyticsService {
         },
       });
 
+      // Skip multi-product links (they don't have a single product_id)
+      if (!link.product_id) {
+        continue;
+      }
+
       const linkConversions = conversions.filter((c) => c.product_id === link.product_id);
       const linkRevenue = linkConversions.reduce((sum, c) => sum + Number(c.amount), 0);
       const linkCommission = linkConversions.reduce((sum, c) => sum + Number(c.commission_amount), 0);
@@ -397,5 +402,141 @@ export class AnalyticsService {
       conversions: parseInt(row.conversions, 10),
       revenue: parseFloat(row.revenue),
     }));
+  }
+
+  // Admin: Get platform-wide analytics
+  async getAdminPlatformAnalytics(filter: AnalyticsFilterDto) {
+    const { start, end } = this.getDateRange(filter);
+
+    // Get all conversions in the period
+    const conversions = await this.conversionRepository.find({
+      where: {
+        converted_at: Between(start, end),
+      },
+      relations: ['brand', 'influencer', 'product'],
+    });
+
+    // Get all clicks in the period
+    const totalClicks = await this.clickRepository.count({
+      where: {
+        clicked_at: Between(start, end),
+      },
+    });
+
+    // Aggregate metrics
+    const totalConversions = conversions.length;
+    const totalRevenue = conversions.reduce((sum, c) => sum + Number(c.amount), 0);
+    const totalCommission = conversions.reduce((sum, c) => sum + Number(c.commission_amount), 0);
+    const conversionRate = totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
+
+    // Revenue over time (daily)
+    const revenueByDay = await this.conversionRepository
+      .createQueryBuilder('conversion')
+      .select('DATE(conversion.converted_at)', 'date')
+      .addSelect('COUNT(*)', 'conversions')
+      .addSelect('SUM(conversion.amount)', 'revenue')
+      .addSelect('SUM(conversion.commission_amount)', 'commission')
+      .where('conversion.converted_at BETWEEN :start AND :end', { start, end })
+      .groupBy('DATE(conversion.converted_at)')
+      .orderBy('date', 'ASC')
+      .getRawMany();
+
+    const revenueChart = revenueByDay.map((row) => ({
+      date: row.date,
+      conversions: parseInt(row.conversions, 10),
+      revenue: parseFloat(row.revenue) || 0,
+      commission: parseFloat(row.commission) || 0,
+    }));
+
+    // Top brands by revenue
+    const brandRevenue = new Map<string, { name: string; revenue: number; conversions: number }>();
+    conversions.forEach((c) => {
+      if (c.brand) {
+        const existing = brandRevenue.get(c.brand_id) || {
+          name: c.brand.company_name,
+          revenue: 0,
+          conversions: 0,
+        };
+        existing.revenue += Number(c.amount);
+        existing.conversions += 1;
+        brandRevenue.set(c.brand_id, existing);
+      }
+    });
+
+    const topBrands = Array.from(brandRevenue.entries())
+      .sort((a, b) => b[1].revenue - a[1].revenue)
+      .slice(0, 10)
+      .map(([id, data]) => ({
+        brand_id: id,
+        brand_name: data.name,
+        revenue: data.revenue,
+        conversions: data.conversions,
+      }));
+
+    // Top influencers by earnings
+    const influencerEarnings = new Map<string, { name: string; earnings: number; conversions: number }>();
+    conversions.forEach((c) => {
+      if (c.influencer) {
+        const existing = influencerEarnings.get(c.influencer_id) || {
+          name: c.influencer.display_name || 'Unknown',
+          earnings: 0,
+          conversions: 0,
+        };
+        existing.earnings += Number(c.commission_amount);
+        existing.conversions += 1;
+        influencerEarnings.set(c.influencer_id, existing);
+      }
+    });
+
+    const topInfluencers = Array.from(influencerEarnings.entries())
+      .sort((a, b) => b[1].earnings - a[1].earnings)
+      .slice(0, 10)
+      .map(([id, data]) => ({
+        influencer_id: id,
+        influencer_name: data.name,
+        earnings: data.earnings,
+        conversions: data.conversions,
+      }));
+
+    // Conversion status breakdown
+    const conversionsByStatus = {
+      pending: conversions.filter((c) => c.status === ConversionStatus.PENDING).length,
+      approved: conversions.filter((c) => c.status === ConversionStatus.APPROVED).length,
+      rejected: conversions.filter((c) => c.status === ConversionStatus.REJECTED).length,
+      paid: conversions.filter((c) => c.status === ConversionStatus.PAID).length,
+    };
+
+    // Get previous period for comparison
+    const periodDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    const prevStart = new Date(start);
+    prevStart.setDate(prevStart.getDate() - periodDays);
+    const prevEnd = new Date(start);
+    prevEnd.setSeconds(prevEnd.getSeconds() - 1);
+
+    const prevConversions = await this.conversionRepository.find({
+      where: {
+        converted_at: Between(prevStart, prevEnd),
+      },
+    });
+
+    const prevTotalRevenue = prevConversions.reduce((sum, c) => sum + Number(c.amount), 0);
+    const prevTotalConversions = prevConversions.length;
+
+    const revenueGrowth = prevTotalRevenue > 0 ? ((totalRevenue - prevTotalRevenue) / prevTotalRevenue) * 100 : 0;
+    const conversionGrowth = prevTotalConversions > 0 ? ((totalConversions - prevTotalConversions) / prevTotalConversions) * 100 : 0;
+
+    return {
+      total_clicks: totalClicks,
+      total_conversions: totalConversions,
+      total_revenue: totalRevenue,
+      total_commission: totalCommission,
+      conversion_rate: conversionRate,
+      revenue_growth: revenueGrowth,
+      conversion_growth: conversionGrowth,
+      revenue_chart: revenueChart,
+      top_brands: topBrands,
+      top_influencers: topInfluencers,
+      conversions_by_status: conversionsByStatus,
+    };
   }
 }

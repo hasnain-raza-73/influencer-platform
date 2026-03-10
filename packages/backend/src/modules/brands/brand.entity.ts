@@ -33,6 +33,9 @@ export class Brand {
   company_name: string;
 
   @Column({ nullable: true })
+  display_name?: string;
+
+  @Column({ nullable: true })
   website?: string;
 
   @Column({ nullable: true })
@@ -73,4 +76,12 @@ export class Brand {
   @OneToOne(() => User, (user) => user.brand)
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  /**
+   * Get the public-facing brand name
+   * Returns display_name if set, otherwise falls back to company_name
+   */
+  getPublicName(): string {
+    return this.display_name || this.company_name;
+  }
 }

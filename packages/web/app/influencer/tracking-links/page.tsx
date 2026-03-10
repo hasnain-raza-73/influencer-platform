@@ -16,9 +16,12 @@ import {
   TrendingUp,
   MousePointerClick,
   ShoppingCart,
+  QrCode,
+  Download,
 } from 'lucide-react'
 import { trackingService } from '@/services/tracking-service'
 import { TrackingLink } from '@/types'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 export default function TrackingLinksPage() {
   const router = useRouter()
@@ -30,6 +33,12 @@ export default function TrackingLinksPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [copiedId, setCopiedId] = useState<string | null>(null)
+
+  // QR Code state
+  const [showQRModal, setShowQRModal] = useState(false)
+  const [selectedLink, setSelectedLink] = useState<TrackingLink | null>(null)
+  const [qrCodeData, setQrCodeData] = useState<string | null>(null)
+  const [isGeneratingQR, setIsGeneratingQR] = useState(false)
 
   useEffect(() => {
     if (!isAuthenticated || user?.role !== 'INFLUENCER') {
@@ -93,6 +102,40 @@ export default function TrackingLinksPage() {
     }
   }
 
+  const handleGenerateQRCode = async (link: TrackingLink) => {
+    try {
+      setSelectedLink(link)
+      setShowQRModal(true)
+      setIsGeneratingQR(true)
+      setQrCodeData(null)
+
+      const result = await trackingService.generateQRCode(link.id, {
+        size: 500,
+        format: 'png',
+      })
+
+      setQrCodeData(result.qr_code_url)
+    } catch (err: any) {
+      console.error('Error generating QR code:', err)
+      alert(err.message || 'Failed to generate QR code')
+      setShowQRModal(false)
+    } finally {
+      setIsGeneratingQR(false)
+    }
+  }
+
+  const handleDownloadQRCode = () => {
+    if (!qrCodeData || !selectedLink) return
+
+    // Create a download link
+    const link = document.createElement('a')
+    link.href = qrCodeData
+    link.download = `qr-code-${selectedLink.unique_code}.png`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   const getConversionRate = (link: TrackingLink) => {
     if (!link.clicks || link.clicks === 0) return 0
     return (((link.conversions || 0) / link.clicks) * 100).toFixed(2)
@@ -111,6 +154,10 @@ export default function TrackingLinksPage() {
               </p>
             </div>
             <div className="flex items-center gap-3">
+              <Button variant="outline" onClick={() => router.push('/influencer/tracking-links/advanced')}>
+                <LinkIcon className="w-4 h-4 mr-2" />
+                Advanced Link
+              </Button>
               <Button variant="primary" onClick={() => router.push('/influencer/tracking-links/new')}>
                 <Plus className="w-4 h-4 mr-2" />
                 Create Link
@@ -206,6 +253,15 @@ export default function TrackingLinksPage() {
                             Copy Link
                           </>
                         )}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleGenerateQRCode(link)}
+                        className="text-purple-600 hover:bg-purple-50"
+                      >
+                        <QrCode className="w-4 h-4 mr-2" />
+                        QR Code
                       </Button>
                       <Button
                         variant="outline"
@@ -308,6 +364,66 @@ export default function TrackingLinksPage() {
           </Card>
         )}
       </main>
+
+      {/* QR Code Modal */}
+      <Dialog open={showQRModal} onOpenChange={setShowQRModal}>
+        <DialogContent title="QR Code">
+          <div className="space-y-4">
+            {selectedLink && (
+              <>
+                <div className="text-center">
+                  <p className="text-sm text-gray-600 mb-2">QR Code for:</p>
+                  <code className="text-lg font-mono font-semibold text-gray-900 bg-gray-100 px-3 py-1 rounded">
+                    {selectedLink.unique_code}
+                  </code>
+                </div>
+
+                {/* QR Code Display */}
+                <div className="flex items-center justify-center bg-white border-2 border-gray-200 rounded-lg p-8">
+                  {isGeneratingQR ? (
+                    <div className="text-center">
+                      <div className="animate-spin w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-3"></div>
+                      <p className="text-sm text-gray-600">Generating QR code...</p>
+                    </div>
+                  ) : qrCodeData ? (
+                    <img
+                      src={qrCodeData}
+                      alt="QR Code"
+                      className="w-64 h-64 object-contain"
+                    />
+                  ) : (
+                    <div className="text-center text-gray-500">
+                      <QrCode className="w-16 h-16 mx-auto mb-2 text-gray-300" />
+                      <p className="text-sm">Failed to generate QR code</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Info */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <p className="text-sm text-blue-700">
+                    Scan this QR code to access your tracking link. Perfect for print materials, business cards, or in-person promotions.
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowQRModal(false)}>
+              Close
+            </Button>
+            <Button
+              onClick={handleDownloadQRCode}
+              disabled={!qrCodeData}
+              className="bg-purple-600 hover:bg-purple-700 text-white"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Download QR Code
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

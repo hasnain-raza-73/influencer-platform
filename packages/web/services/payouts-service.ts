@@ -37,7 +37,7 @@ export const payoutsService = {
    * Get available balance
    */
   async getAvailableBalance(): Promise<AvailableBalanceResponse> {
-    const response = await api.get<AvailableBalanceResponse>('/payouts/balance')
+    const response = await api.get<AvailableBalanceResponse>('/payouts/available-balance')
     return response.data
   },
 
@@ -45,7 +45,7 @@ export const payoutsService = {
    * Get payout statistics
    */
   async getStatistics(): Promise<PayoutStatsResponse> {
-    const response = await api.get<PayoutStatsResponse>('/payouts/statistics')
+    const response = await api.get<PayoutStatsResponse>('/payouts/my-stats')
     return response.data
   },
 
@@ -53,7 +53,7 @@ export const payoutsService = {
    * Get all payouts
    */
   async getAll(params?: PaginationParams): Promise<Payout[]> {
-    const response = await api.get<Payout[]>('/payouts', { params })
+    const response = await api.get<Payout[]>('/payouts/my-payouts', { params })
     return response.data
   },
 

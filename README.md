@@ -9,6 +9,9 @@ A marketplace platform connecting brands with influencers for product promotion 
 - **Tracking System**: Advanced click and conversion tracking with attribution
 - **Analytics Dashboard**: Comprehensive performance metrics
 - **Partnership System**: Direct hiring and application system
+- **Social Media Integration**: OAuth integration with Instagram, Facebook, and TikTok
+- **Verified Social Accounts**: Influencers can connect and verify their social media profiles
+- **Automatic Metrics Sync**: Follower counts and engagement rates auto-updated
 - **Mobile First**: React Native app for both iOS and Android
 - **Real-time Notifications**: Push notifications via FCM
 - **Secure Authentication**: JWT + OAuth (Google, Apple)
@@ -157,7 +160,8 @@ npm run test
 - [API Documentation](./API_DOCUMENTATION.md) - Complete API reference
 - [Database Schema](./DATABASE_SCHEMA.md) - Database structure
 - [Tracking Specification](./TRACKING_SPEC.md) - Tracking system details
-- [Deployment Guide](./DEPLOYMENT.md) - Production deployment
+- [MVP Deployment Guide](./MVP.md) - Free tier deployment (Render + Vercel + Supabase)
+- [OAuth Setup Guide](./OAUTH_SETUP.md) - **Instagram, Facebook, TikTok integration**
 - [Progress Tracker](./PROGRESS.md) - Development roadmap
 
 ## 🔑 Key Concepts
@@ -213,13 +217,31 @@ DATABASE_NAME=influencer_platform
 # JWT
 JWT_SECRET=your-secret-key
 
-# AWS
+# AWS / Cloudinary (Image Storage)
 AWS_REGION=us-east-1
 S3_BUCKET_PRODUCTS=your-bucket
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
 
-# OAuth
+# OAuth - User Authentication
 GOOGLE_CLIENT_ID=your-client-id
+
+# OAuth - Social Media Integration (See OAUTH_SETUP.md)
+INSTAGRAM_CLIENT_ID=your-instagram-app-id
+INSTAGRAM_CLIENT_SECRET=your-instagram-app-secret
+INSTAGRAM_REDIRECT_URI=http://localhost:3000/v1/oauth/instagram/callback
+
+FACEBOOK_APP_ID=your-facebook-app-id
+FACEBOOK_APP_SECRET=your-facebook-app-secret
+FACEBOOK_REDIRECT_URI=http://localhost:3000/v1/oauth/facebook/callback
+
+TIKTOK_CLIENT_KEY=your-tiktok-client-key
+TIKTOK_CLIENT_SECRET=your-tiktok-client-secret
+TIKTOK_REDIRECT_URI=http://localhost:3000/v1/oauth/tiktok/callback
 ```
+
+**Note**: For detailed OAuth setup instructions, see **[OAUTH_SETUP.md](./OAUTH_SETUP.md)**
 
 ## 🤝 Contributing
 

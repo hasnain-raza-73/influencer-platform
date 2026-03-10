@@ -89,6 +89,32 @@ export interface Influencer {
   status: string
   created_at: string
   updated_at: string
+  // New discovery fields
+  engagement_rate?: number
+  country?: string
+  city?: string
+  languages?: string[]
+  available_for_campaigns?: boolean
+  campaign_types_interested?: string[]
+  is_featured?: boolean
+  portfolio_urls?: {
+    instagram_posts?: string[]
+    tiktok_videos?: string[]
+    youtube_videos?: string[]
+  }
+  media_kit_url?: string
+  profile_image_url?: string
+  social_accounts?: Array<{
+    id: string
+    platform: string
+    platform_username?: string
+    is_verified: boolean
+    verification_level?: string
+    metrics?: Array<{
+      followers_count: number
+      engagement_rate: number
+    }>
+  }>
 }
 
 /**

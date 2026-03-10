@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Brand Marketing Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.75rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex min-h-screen">
+<!-- Sidebar -->
+<aside class="fixed inset-y-0 left-0 w-[240px] bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col z-50">
+<div class="p-6">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">hub</span>
+</div>
+<span class="font-bold text-lg tracking-tight">InfluencerHub</span>
+</div>
+</div>
+<nav class="flex-1 px-4 py-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary font-medium" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">campaign</span>
+                    Campaigns
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">explore</span>
+                    Discovery
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+                    Reports
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-200/50 dark:hover:bg-slate-800 cursor-pointer">
+<div class="size-10 rounded-full bg-slate-300 overflow-hidden" data-alt="Professional headshot of a brand manager" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDRRfi1_IJ_9Sx_yBBz9gERYqbEjX2dhm8NgMEm_CbctkWtJRiYyzezsKrWyqhCkZ9ke4elmYVIirrmFtg29EluIOyFcnHxqY039Zz3YII6s3V_ka9p0z8nt6B05GHMGE7KPZ41MnO0jSnuc70Bd6yMors6HVkzz0zNr2UNTa8FAnsCyuZ4LYV7yIuASBUKeAdp6u6qrgqE_7QKwiKLQltOgLr74Q0-FdBLQQP9o3P58YCJ1C__2dnp0Im9g2AHyEdf__DUfko9rwIV'); background-size: cover;"></div>
+<div class="flex-1 overflow-hidden">
+<p class="text-sm font-semibold truncate">Alex Rivera</p>
+<p class="text-xs text-slate-500 truncate">Brand Manager</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-sm">unfold_more</span>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-[240px] flex-1 flex flex-col min-h-screen">
+<!-- Header -->
+<header class="sticky top-0 z-40 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-8 h-16 flex items-center justify-between">
+<div class="w-full max-w-md relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg focus:ring-2 focus:ring-primary/20 text-sm transition-all" placeholder="Search campaigns, influencers..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="size-10 flex items-center justify-center rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white dark:border-background-dark"></span>
+</button>
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold transition-all shadow-sm shadow-primary/20">
+<span class="material-symbols-outlined text-lg">add</span>
+                        Create Campaign
+                    </button>
+</div>
+</header>
+<div class="p-8 space-y-8">
+<!-- Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<span class="text-slate-500 text-sm font-medium">Active Campaigns</span>
+<span class="p-2 bg-primary/10 rounded-lg text-primary material-symbols-outlined text-lg">rocket_launch</span>
+</div>
+<p class="text-3xl font-bold">12</p>
+<div class="mt-2 flex items-center gap-1 text-xs font-semibold text-emerald-600">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                            +2% from last month
+                        </div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<span class="text-slate-500 text-sm font-medium">Total Reach</span>
+<span class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-purple-600 material-symbols-outlined text-lg">group</span>
+</div>
+<p class="text-3xl font-bold">2.4M</p>
+<div class="mt-2 flex items-center gap-1 text-xs font-semibold text-emerald-600">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                            +15% increase
+                        </div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<span class="text-slate-500 text-sm font-medium">Avg. Engagement</span>
+<span class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg text-orange-600 material-symbols-outlined text-lg">favorite</span>
+</div>
+<p class="text-3xl font-bold">4.8%</p>
+<div class="mt-2 flex items-center gap-1 text-xs font-semibold text-rose-600">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+                            -0.5% decrease
+                        </div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<span class="text-slate-500 text-sm font-medium">Total Spend</span>
+<span class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 material-symbols-outlined text-lg">payments</span>
+</div>
+<p class="text-3xl font-bold">$45.2k</p>
+<div class="mt-2 flex items-center gap-1 text-xs font-semibold text-emerald-600">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                            +8% within budget
+                        </div>
+</div>
+</div>
+<!-- Middle Row: Chart & Top Influencers -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Chart Area -->
+<div class="lg:col-span-8 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="text-lg font-bold">Campaign Performance</h3>
+<p class="text-sm text-slate-500">Impressions vs. Engagement over 30 days</p>
+</div>
+<div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+<button class="px-3 py-1 text-xs font-semibold bg-white dark:bg-slate-700 rounded shadow-sm">30d</button>
+<button class="px-3 py-1 text-xs font-semibold text-slate-500">90d</button>
+<button class="px-3 py-1 text-xs font-semibold text-slate-500">12m</button>
+</div>
+</div>
+<div class="flex-1 h-64 w-full relative">
+<!-- SVG Chart Simulation -->
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 1000 300">
+<defs>
+<lineargradient id="gradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#2463eb" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#2463eb" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,250 Q150,220 250,240 T450,150 T650,180 T850,100 T1000,120 L1000,300 L0,300 Z" fill="url(#gradient)"></path>
+<path d="M0,250 Q150,220 250,240 T450,150 T650,180 T850,100 T1000,120" fill="none" stroke="#2463eb" stroke-linecap="round" stroke-width="4"></path>
+<path d="M0,280 Q200,260 350,270 T550,230 T750,250 T950,200 T1000,210" fill="none" stroke="#94a3b8" stroke-dasharray="8,8" stroke-width="2"></path>
+</svg>
+<div class="flex justify-between mt-4 text-[10px] uppercase tracking-wider text-slate-400 font-bold">
+<span>1 Oct</span>
+<span>8 Oct</span>
+<span>15 Oct</span>
+<span>22 Oct</span>
+<span>29 Oct</span>
+</div>
+</div>
+</div>
+<!-- Side Card -->
+<div class="lg:col-span-4 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold">Top Influencers</h3>
+<button class="text-primary text-xs font-bold hover:underline">View All</button>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-200 overflow-hidden" data-alt="Profile picture of influencer Sophia Chen" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBzUGr9qaoqxdBFtDzJ9p7STQ7Rks9G4ZWvP7pdfS2BufJePG57K_jQ8Z_GnyhjC2EOOQ5JjBykCFrumNVcDmX9wXrmy-UxEAS3c6AIPItdWUYjdvMZ3uUM73lThR-OJ2Sc7MUo1FyujzrjI3OAFFFyVBfEGN2e960dob01ri4Diozx1km7PK4oNaGhBV-27qIUoFOhXW2TwVRv3HLh_TIh3XVEHvSgr2I7Kst3CCBI9D9DqHghFjTeXyvQ0k6mAdVyL1YPoHzgAQFR'); background-size: cover;"></div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-semibold truncate">Sophia Chen</p>
+<p class="text-xs text-slate-500">Tech &amp; Lifestyle</p>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold">5.2%</p>
+<p class="text-[10px] text-emerald-600 font-bold">TOP 1%</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-200 overflow-hidden" data-alt="Profile picture of influencer Marcus Vane" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDlqj1t7-iwLJdZvPjcIE-6dcwdp2UpanRAati2fjskClhnttfHNyatrT_2nQEqAYx1SiSaqm15mIoaxnONb7LhelfjYytOohOTZo9l2k6fyIqkc5SAOSA2oSSXgSDToClY5QlzZSF9MCeOjNyBE67NAx1f9Ksgoi561rLNlDeSMgrJgHtzBac2tzVfM7aS1P4fOo_hds4SWH_6wie3AdMOCIi83FmXVbdJYTAUyiRBKc32spX70xlgBn7d3tgZgmqSVUBKmWN6j3br'); background-size: cover;"></div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-semibold truncate">Marcus Vane</p>
+<p class="text-xs text-slate-500">Fitness Guru</p>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold">4.9%</p>
+<p class="text-[10px] text-emerald-600 font-bold">TOP 5%</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-200 overflow-hidden" data-alt="Profile picture of influencer Elena Rossi" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCyajzPGxRvpwBkUkge7sJXy6ZKczWiopwGbt1aN1fWUEoyf5LF9X3XMvtqCuWbHB5ztfuU8bn87rUy_FhNFBg--yJ2tC1Cypd6caH7kbSWbmy9TWpAw3-JFE40Giwbst7opWtTX5LW4LOA2PeDiOjchbzc38hVZ124O2TX4VtpP6gMFUVM6fCn8A_InAI6-U8QHLFwkQ-jIAJeDYmE3Nx_wXTLWq-8R8KyGbB_0iopn3CFvmLEw9xyPqnFPRlZNxcEUDfZINu099_6'); background-size: cover;"></div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-semibold truncate">Elena Rossi</p>
+<p class="text-xs text-slate-500">High Fashion</p>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold">4.7%</p>
+<p class="text-[10px] text-emerald-600 font-bold">TOP 10%</p>
+</div>
+</div>
+</div>
+<div class="mt-8 p-4 bg-primary/5 rounded-xl border border-primary/10">
+<p class="text-xs font-semibold text-primary mb-1">Smart Match Tip</p>
+<p class="text-[11px] leading-relaxed text-slate-600 dark:text-slate-400">
+                                Influencers in the "Lifestyle" category have 20% higher conversion rates for your brand.
+                            </p>
+</div>
+</div>
+</div>
+<!-- Bottom Row: Data Table -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<h3 class="font-bold text-lg">Recent Activity</h3>
+<button class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 transition-all">
+<span class="material-symbols-outlined text-base">filter_list</span>
+                            Filter
+                        </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 text-xs font-bold uppercase tracking-wider">
+<tr>
+<th class="px-6 py-4">Influencer</th>
+<th class="px-6 py-4">Campaign</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4">ROI</th>
+<th class="px-6 py-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 flex items-center gap-3">
+<div class="size-8 rounded-full bg-slate-100 overflow-hidden" data-alt="Small profile thumbnail for influencer" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuASTWPe5U24FXWjHgmWui4q8sueZSvFRtxbnxsTTBDU5Ewblt3-buciGyARp8HhwrPTSirc7xvSYVISSb-8pRCiMNEkf3snyz8F0UMqoYAEhKUZ5DEaGkNnKSACkhMYuqljJRhuECFs1FfQfoyJLW9UNEG363MIBkDpfP6Vxa8U1WcMnMKyS1GjZWdyb4Q1Q8rMfweW9f79jfFeD7viYNmhvcYE0Vjx2bzvsH7t1VINELtFMuD7NA9AnaFnR9BT6LhVcbAgm7loNcOk'); background-size: cover;"></div>
+<span class="text-sm font-semibold">David G.</span>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm">Autumn Launch v1</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400">
+                                            In Progress
+                                        </span>
+</td>
+<td class="px-6 py-4 text-sm font-medium">3.2x</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-slate-400 hover:text-slate-600">more_horiz</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 flex items-center gap-3">
+<div class="size-8 rounded-full bg-slate-100 overflow-hidden" data-alt="Small profile thumbnail for influencer" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBjqYHmRiOHJlZgOCYoSFaAr7l8phi-jnij-aJdghhx_gGWDQhtnX6dBQ4rs1zkzY4CwjE2lK87DBvAsFFcuNobeYZJ11O0KG_O_-oGYYhDzK8LcPk5JvELWZ9w5xDEf43zi0TAxh03ktQFLfJp6uiy1vLuc_Ywr3dDVdHoTb8rhUAIqdZiOXGSREIKPB5f44ztbHaChUIEFoNnaNmTHUX2O7LVNxRFELBNVFEEVVXSCmqRAhYMfy_GscLgzYEeJRWlHxwuQmewlgRP'); background-size: cover;"></div>
+<span class="text-sm font-semibold">Sarah J.</span>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm">Holiday Special</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                            Completed
+                                        </span>
+</td>
+<td class="px-6 py-4 text-sm font-medium">5.8x</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-slate-400 hover:text-slate-600">more_horiz</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 flex items-center gap-3">
+<div class="size-8 rounded-full bg-slate-100 overflow-hidden" data-alt="Small profile thumbnail for influencer" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDujQRGyfDcU0WO0p4ZBxe-tID04bqprR-wOemNbMdO7g4QL7YVUsIk6gjEi9EYs6ao7loE4f3xwDXChPEPYHd3vGzMhKvKJ8mXqezLj2ZWAV4e20nPfo7a-QI4ONi3eVTTeD4x5_1Ud_-FuJj_9OxSNmAIq6J_6L7mrpl9a05TEQzS-P4LVtAprPavd76Dj4_YL9za16sy_J1R--X-fqxuaLrjMsdfMXj6KnhhnR_ffQWAxzeVIGCXRAuVf63S9in05g8SnW_FcTZ7'); background-size: cover;"></div>
+<span class="text-sm font-semibold">Mike T.</span>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm">Tech Week 2024</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                                            Awaiting Approval
+                                        </span>
+</td>
+<td class="px-6 py-4 text-sm font-medium">--</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-slate-400 hover:text-slate-600">more_horiz</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 flex items-center gap-3">
+<div class="size-8 rounded-full bg-slate-100 overflow-hidden" data-alt="Small profile thumbnail for influencer" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB5X4SZDAsjmyCBBubBNjXxwpylR1J2d0AKuzHw2LxM8HTiKNumcozrwnwOoSvGnhBkDOuPnBMMXodhHJ0sFL94dbmiGmYmQoPnMTS2FIPyF_OORmwspFJlCWrp64kLxQifwymJts3x4REv3ELWAPK7nP_eUm0e6fgMZqirLzSP7cFt6r9L8jUihN0oePkeH_cncxJhdVcYt34abpRy9Ho9chnbf8jF9q8KL3pqFglwggvqT4GNAmbfjc3uBaQJkFTJ1TzOrMWEMd_E'); background-size: cover;"></div>
+<span class="text-sm font-semibold">Lilly Rose</span>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm">Summer Flash</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                            Completed
+                                        </span>
+</td>
+<td class="px-6 py-4 text-sm font-medium">4.1x</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-slate-400 hover:text-slate-600">more_horiz</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<p class="text-sm text-slate-500">Showing 4 of 24 activities</p>
+<div class="flex gap-2">
+<button class="px-3 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-base">chevron_left</span>
+</button>
+<button class="px-3 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined text-base">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

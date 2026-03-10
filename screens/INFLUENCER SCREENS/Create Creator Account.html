@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Creator Registration - InfluencerPlatform</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#7c3bed",
+              "background-light": "#f7f6f8",
+              "background-dark": "#171121",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center font-display">
+<div class="flex w-full max-w-[1280px] min-h-[800px] bg-white dark:bg-slate-900 shadow-2xl overflow-hidden rounded-xl m-4">
+<!-- Left Side: Gradient & Mosaic (40%) -->
+<div class="hidden lg:flex lg:w-[40%] bg-gradient-to-br from-[#2563EB] to-[#7C3AED] relative overflow-hidden p-12 flex-col justify-between">
+<div class="relative z-10">
+<div class="flex items-center gap-2 text-white mb-12">
+<span class="material-symbols-outlined text-3xl">hub</span>
+<span class="text-xl font-bold tracking-tight">InfluencerPlatform</span>
+</div>
+<h1 class="text-white text-5xl font-extrabold leading-tight tracking-tight mb-6">
+                    Turn your influence into income
+                </h1>
+<p class="text-blue-100 text-lg">
+                    Join over 10,000+ creators collaborating with the world's most innovative brands.
+                </p>
+</div>
+<!-- Mosaic Visual Decoration -->
+<div class="absolute inset-0 opacity-20 pointer-events-none grid grid-cols-2 gap-4 rotate-12 scale-125 translate-x-20">
+<div class="bg-white/20 h-48 rounded-lg" data-alt="Abstract creator post mosaic tile one"></div>
+<div class="bg-white/20 h-64 rounded-lg" data-alt="Abstract creator post mosaic tile two"></div>
+<div class="bg-white/20 h-40 rounded-lg" data-alt="Abstract creator post mosaic tile three"></div>
+<div class="bg-white/20 h-56 rounded-lg" data-alt="Abstract creator post mosaic tile four"></div>
+<div class="bg-white/20 h-48 rounded-lg" data-alt="Abstract creator post mosaic tile five"></div>
+</div>
+<div class="relative z-10 flex items-center gap-4 text-white/80 text-sm">
+<span class="material-symbols-outlined">verified</span>
+<span>Trusted by top B2B SaaS and Tech Brands</span>
+</div>
+</div>
+<!-- Right Side: Registration Form (60%) -->
+<div class="w-full lg:w-[60%] p-8 md:p-16 overflow-y-auto">
+<div class="max-w-[520px] mx-auto">
+<header class="mb-10">
+<h2 class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 mb-2">Create Creator Account</h2>
+<p class="text-slate-500 dark:text-slate-400">Fill in your details to start your journey with us.</p>
+</header>
+<form class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Full Name</label>
+<input class="w-full h-12 rounded-lg border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-primary" placeholder="Alex Rivera" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Email Address</label>
+<input class="w-full h-12 rounded-lg border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-primary" placeholder="alex@creator.com" type="email"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Primary Platform</label>
+<div class="grid grid-cols-3 gap-4">
+<label class="cursor-pointer">
+<input checked="" class="peer hidden" name="platform" type="radio"/>
+<div class="flex flex-col items-center justify-center p-4 rounded-lg border-2 border-slate-100 dark:border-slate-800 peer-checked:border-primary peer-checked:bg-primary/5 transition-all">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">photo_camera</span>
+<span class="text-xs mt-2 font-medium">Instagram</span>
+</div>
+</label>
+<label class="cursor-pointer">
+<input class="peer hidden" name="platform" type="radio"/>
+<div class="flex flex-col items-center justify-center p-4 rounded-lg border-2 border-slate-100 dark:border-slate-800 peer-checked:border-primary peer-checked:bg-primary/5 transition-all">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">videocam</span>
+<span class="text-xs mt-2 font-medium">TikTok</span>
+</div>
+</label>
+<label class="cursor-pointer">
+<input class="peer hidden" name="platform" type="radio"/>
+<div class="flex flex-col items-center justify-center p-4 rounded-lg border-2 border-slate-100 dark:border-slate-800 peer-checked:border-primary peer-checked:bg-primary/5 transition-all">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">play_circle</span>
+<span class="text-xs mt-2 font-medium">YouTube</span>
+</div>
+</label>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Main Content Category</label>
+<select class="w-full h-12 rounded-lg border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-primary">
+<option>Tech &amp; Software</option>
+<option>Beauty &amp; Lifestyle</option>
+<option>Gaming</option>
+<option>Finance &amp; Business</option>
+<option>Health &amp; Fitness</option>
+</select>
+</div>
+<div class="py-2">
+<button class="w-full h-14 rounded-lg bg-primary/10 text-primary border border-primary/20 flex items-center justify-center gap-3 font-bold hover:bg-primary/20 transition-all shadow-[0_0_15px_rgba(124,59,237,0.1)]" type="button">
+<span class="material-symbols-outlined">link</span>
+                            Connect Social Account
+                        </button>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
+<input class="w-full h-12 rounded-lg border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-primary" placeholder="••••••••" type="password"/>
+</div>
+<div class="flex items-start gap-3 py-2">
+<input class="mt-1 rounded text-primary focus:ring-primary border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800" id="tos" type="checkbox"/>
+<label class="text-sm text-slate-600 dark:text-slate-400" for="tos">
+                            I agree to the <a class="text-primary hover:underline font-medium" href="#">Terms of Service</a> and <a class="text-primary hover:underline font-medium" href="#">Privacy Policy</a>.
+                        </label>
+</div>
+<button class="w-full h-14 rounded-lg bg-primary text-white font-bold text-lg hover:brightness-110 transition-all shadow-lg shadow-primary/20" type="submit">
+                        Create Creator Account
+                    </button>
+<p class="text-center text-sm text-slate-500 dark:text-slate-400 pt-4">
+                        Already have an account? <a class="text-primary font-bold hover:underline" href="#">Log In</a>
+</p>
+</form>
+</div>
+</div>
+</div>
+</body></html>

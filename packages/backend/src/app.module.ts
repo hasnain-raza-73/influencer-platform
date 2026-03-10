@@ -15,6 +15,10 @@ import { PayoutsModule } from './modules/payouts/payouts.module';
 import { IntegrationsModule } from './modules/integrations/integrations.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { UploadModule } from './modules/upload/upload.module';
+import { MessagesModule } from './modules/messages/messages.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
+import { SocialIntegrationsModule } from './modules/social-integrations/social-integrations.module';
+import { OAuthModule } from './modules/oauth/oauth.module';
 
 @Module({
   imports: [
@@ -46,6 +50,10 @@ import { UploadModule } from './modules/upload/upload.module';
     IntegrationsModule,
     AdminModule,
     UploadModule,
+    MessagesModule,
+    NotificationsModule,
+    SocialIntegrationsModule,
+    OAuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

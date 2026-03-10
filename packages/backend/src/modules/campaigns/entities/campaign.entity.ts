@@ -18,6 +18,11 @@ export enum CampaignStatus {
   ENDED = 'ended',
 }
 
+export enum CampaignType {
+  OPEN = 'OPEN',
+  SPECIFIC = 'SPECIFIC',
+}
+
 @Entity('campaigns')
 export class Campaign {
   @PrimaryGeneratedColumn('uuid')
@@ -39,6 +44,9 @@ export class Campaign {
   @Column({ type: 'enum', enum: CampaignStatus, default: CampaignStatus.DRAFT })
   status: CampaignStatus;
 
+  @Column({ type: 'enum', enum: CampaignType, default: CampaignType.OPEN })
+  campaign_type: CampaignType;
+
   // Commission settings
   @Column({ type: 'decimal', precision: 5, scale: 2 })
   commission_rate: number; // Percentage (e.g., 10.00 for 10%)
@@ -59,6 +67,13 @@ export class Campaign {
 
   @Column({ type: 'integer', nullable: true })
   max_conversions: number;
+
+  // Location and currency
+  @Column({ type: 'varchar', length: 2, nullable: true })
+  country: string; // ISO 3166-1 alpha-2 country code (e.g., US, UK, CA)
+
+  @Column({ type: 'varchar', length: 3, default: 'USD' })
+  currency: string; // ISO 4217 currency code (e.g., USD, GBP, EUR)
 
   // Targeting
   @Column({ type: 'simple-array', nullable: true })

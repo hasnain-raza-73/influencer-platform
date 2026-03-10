@@ -21,7 +21,13 @@
       "Bash(lsof:*)",
       "Bash(node --version)",
       "Bash(npm run seed:admin:*)",
-      "Bash(xargs kill:*)"
+      "Bash(xargs kill:*)",
+      "Bash(cd /Users/hasnainraza/Desktop/My\\ Stores/influencer-platform/packages/backend && npm run migration:generate:*)",
+      "Bash(cd /Users/hasnainraza/Desktop/My\\ Stores/influencer-platform/packages/web && npm run dev:*)",
+      "Bash(npm run start:dev)",
+      "Bash(npm run migration:generate:*)",
+      "Bash(npx tsc:*)",
+      "Bash(cd /Users/hasnainraza/Desktop/My\\ Stores/influencer-platform/packages/backend && npm run typeorm:*)"
     ],
     "deny": [],
     "ask": []

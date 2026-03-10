@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   Users,
+  Mail,
 } from 'lucide-react'
 
 interface NavItem {
@@ -39,6 +40,7 @@ export function MobileNav() {
   const influencerNavItems: NavItem[] = [
     { name: 'Dashboard', href: '/influencer/dashboard', icon: LayoutDashboard },
     { name: 'Campaigns', href: '/influencer/campaigns', icon: Target },
+    { name: 'Invitations', href: '/influencer/invitations', icon: Mail },
     { name: 'Tracking Links', href: '/influencer/tracking-links', icon: LinkIcon },
     { name: 'Payouts', href: '/influencer/payouts', icon: DollarSign },
     { name: 'Settings', href: '/settings', icon: Settings },

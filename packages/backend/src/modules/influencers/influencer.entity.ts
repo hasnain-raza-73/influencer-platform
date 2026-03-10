@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
+  OneToMany,
   JoinColumn,
 } from 'typeorm';
 import { User } from '../users/user.entity';
+import { SocialAccount } from '../social-integrations/entities/social-account.entity';
 
 export enum InfluencerStatus {
   ACTIVE = 'ACTIVE',
@@ -72,6 +74,41 @@ export class Influencer {
   })
   status: InfluencerStatus;
 
+  // New discovery fields
+  @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
+  engagement_rate: number;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  country?: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  city?: string;
+
+  @Column({ type: 'varchar', array: true, default: '{}' })
+  languages: string[];
+
+  @Column({ default: true })
+  available_for_campaigns: boolean;
+
+  @Column({ type: 'varchar', array: true, default: '{}' })
+  campaign_types_interested: string[];
+
+  @Column({ default: false })
+  is_featured: boolean;
+
+  @Column({ type: 'jsonb', nullable: true })
+  portfolio_urls?: {
+    instagram_posts?: string[];
+    tiktok_videos?: string[];
+    youtube_videos?: string[];
+  };
+
+  @Column({ type: 'text', nullable: true })
+  media_kit_url?: string;
+
+  @Column({ nullable: true })
+  profile_image_url?: string;
+
   @CreateDateColumn()
   created_at: Date;
 
@@ -81,4 +118,7 @@ export class Influencer {
   @OneToOne(() => User, (user) => user.influencer)
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @OneToMany(() => SocialAccount, (socialAccount) => socialAccount.influencer)
+  social_accounts: SocialAccount[];
 }

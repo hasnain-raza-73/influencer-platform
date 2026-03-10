@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { adminService, AdminInfluencer } from '@/services/admin-service'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Search, CheckCircle, XCircle, User, Eye } from 'lucide-react'
+import { Search, CheckCircle, XCircle, User, Eye, Trash2 } from 'lucide-react'
 
 type InfluencerStatus = 'ALL' | 'ACTIVE' | 'SUSPENDED'
 
@@ -17,7 +17,7 @@ export default function AdminInfluencersPage() {
   const [status, setStatus] = useState<InfluencerStatus>('ALL')
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [confirmId, setConfirmId] = useState<string | null>(null)
-  const [confirmAction, setConfirmAction] = useState<'ACTIVE' | 'SUSPENDED' | null>(null)
+  const [confirmAction, setConfirmAction] = useState<'ACTIVE' | 'SUSPENDED' | 'DELETE' | null>(null)
 
   const load = useCallback(async () => {
     setIsLoading(true)
@@ -43,6 +43,19 @@ export default function AdminInfluencersPage() {
       await adminService.updateInfluencerStatus(id, newStatus)
       setInfluencers((prev) => prev.map((i) => i.id === id ? { ...i, status: newStatus } : i))
     } catch {}
+    setActionLoading(null)
+    setConfirmId(null)
+    setConfirmAction(null)
+  }
+
+  const handleDelete = async (id: string) => {
+    setActionLoading(id)
+    try {
+      await adminService.deleteInfluencer(id)
+      setInfluencers((prev) => prev.filter((i) => i.id !== id))
+    } catch (error) {
+      console.error('Failed to delete influencer:', error)
+    }
     setActionLoading(null)
     setConfirmId(null)
     setConfirmAction(null)
@@ -153,6 +166,15 @@ export default function AdminInfluencersPage() {
                         Enable
                       </Button>
                     )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-red-700 border-red-300 hover:bg-red-100"
+                      onClick={() => { setConfirmId(inf.id); setConfirmAction('DELETE') }}
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      Delete
+                    </Button>
                   </div>
                 </div>
               </CardContent>
@@ -165,10 +187,16 @@ export default function AdminInfluencersPage() {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-6 max-w-sm w-full shadow-xl">
             <h3 className="font-semibold text-gray-900 mb-2">
-              {confirmAction === 'SUSPENDED' ? 'Suspend Influencer?' : 'Enable Influencer?'}
+              {confirmAction === 'DELETE'
+                ? 'Delete Influencer Permanently?'
+                : confirmAction === 'SUSPENDED'
+                ? 'Suspend Influencer?'
+                : 'Enable Influencer?'}
             </h3>
             <p className="text-sm text-gray-600 mb-6">
-              {confirmAction === 'SUSPENDED'
+              {confirmAction === 'DELETE'
+                ? 'This will permanently delete the influencer account and all associated data. This action cannot be undone.'
+                : confirmAction === 'SUSPENDED'
                 ? 'This will prevent the influencer from accessing the platform.'
                 : "This will restore the influencer's access to the platform."}
             </p>
@@ -178,11 +206,17 @@ export default function AdminInfluencersPage() {
               </Button>
               <Button
                 variant="primary"
-                className={`flex-1 ${confirmAction === 'SUSPENDED' ? 'bg-red-600 hover:bg-red-700' : ''}`}
+                className={`flex-1 ${(confirmAction === 'SUSPENDED' || confirmAction === 'DELETE') ? 'bg-red-600 hover:bg-red-700' : ''}`}
                 isLoading={actionLoading === confirmId}
-                onClick={() => handleStatusChange(confirmId, confirmAction)}
+                onClick={() => {
+                  if (confirmAction === 'DELETE') {
+                    handleDelete(confirmId)
+                  } else {
+                    handleStatusChange(confirmId, confirmAction)
+                  }
+                }}
               >
-                {confirmAction === 'SUSPENDED' ? 'Suspend' : 'Enable'}
+                {confirmAction === 'DELETE' ? 'Delete Permanently' : confirmAction === 'SUSPENDED' ? 'Suspend' : 'Enable'}
               </Button>
             </div>
           </div>

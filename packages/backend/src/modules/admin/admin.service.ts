@@ -112,6 +112,22 @@ export class AdminService {
     return brand;
   }
 
+  async deleteBrand(brandId: string) {
+    const brand = await this.brandRepository.findOne({
+      where: { id: brandId },
+      relations: ['user'],
+    });
+    if (!brand) throw new NotFoundException('Brand not found');
+
+    const userId = brand.user.id;
+
+    // Delete brand (cascade will handle products, campaigns, etc.)
+    await this.brandRepository.remove(brand);
+
+    // Delete associated user account
+    await this.userRepository.delete(userId);
+  }
+
   async getInfluencers(params: { status?: string; search?: string; page?: number; limit?: number }) {
     const { status, search, page = 1, limit = 20 } = params;
     const skip = (page - 1) * limit;
@@ -145,6 +161,22 @@ export class AdminService {
     await this.userRepository.save(influencer.user);
 
     return influencer;
+  }
+
+  async deleteInfluencer(influencerId: string) {
+    const influencer = await this.influencerRepository.findOne({
+      where: { id: influencerId },
+      relations: ['user'],
+    });
+    if (!influencer) throw new NotFoundException('Influencer not found');
+
+    const userId = influencer.user.id;
+
+    // Delete influencer (cascade will handle tracking links, conversions, etc.)
+    await this.influencerRepository.remove(influencer);
+
+    // Delete associated user account
+    await this.userRepository.delete(userId);
   }
 
   async getCampaigns(params: { status?: string; brand_id?: string; page?: number; limit?: number }) {

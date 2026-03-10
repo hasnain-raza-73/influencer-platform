@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Influencer Discovery Engine</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .card-hover-btn { opacity: 0; transition: opacity 0.2s ease-in-out; }
+        .profile-card:hover .card-hover-btn { opacity: 1; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased font-display">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<header class="sticky top-0 z-50 flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-8 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="bg-primary rounded-lg p-1.5 text-white">
+<span class="material-symbols-outlined block">rocket_launch</span>
+</div>
+<h2 class="text-xl font-bold tracking-tight">Discovery Engine</h2>
+</div>
+<div class="relative w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl leading-none">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary transition-all placeholder:text-slate-500" placeholder="Search by name or keyword..." type="text"/>
+</div>
+</div>
+<nav class="flex items-center gap-8">
+<div class="flex items-center gap-6">
+<a class="text-sm font-semibold text-primary" href="#">Discover</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Campaigns</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Analytics</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Messages</a>
+</div>
+<div class="h-6 w-px bg-slate-200 dark:bg-slate-700"></div>
+<div class="flex items-center gap-3">
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 overflow-hidden">
+<img class="h-full w-full object-cover" data-alt="User avatar profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9Ymx2MZH9jiPSGYARWItv2lgsd5yQ9ISczf8oMFVJ9k3fC4YTyKmqvan4qfcSxYJSnveOvvGkPP6c2RjG-fp1hInsUa02eKoQwtEWsmMaC001g-0faguUXtrl26J4ZQuteFWYh5Y43JvQqUnjLIn2IrUnbfy7q-6msS-wMc0YE7aio4eeBTNqus2caJnrA-RT-6nUEwvqE-H_KAj7cYMBXNl4cn8YT2d5KUF-nLlVmp_YwMzhyKPYP4s0vJxuIe3zteSfVQf0OFd_"/>
+</div>
+</div>
+</nav>
+</header>
+<main class="flex flex-1 overflow-hidden">
+<div class="flex-1 flex flex-col overflow-y-auto px-8 py-6">
+<section class="mb-8 flex flex-wrap items-center gap-3">
+<div class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 shadow-sm">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Category</span>
+<select class="border-none bg-transparent py-0 pl-1 pr-8 text-sm font-medium focus:ring-0 cursor-pointer">
+<option>All Categories</option>
+<option>Lifestyle</option>
+<option>Technology</option>
+<option>Fashion</option>
+</select>
+</div>
+<div class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 shadow-sm">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Location</span>
+<select class="border-none bg-transparent py-0 pl-1 pr-8 text-sm font-medium focus:ring-0 cursor-pointer">
+<option>Worldwide</option>
+<option>United States</option>
+<option>United Kingdom</option>
+<option>Germany</option>
+</select>
+</div>
+<div class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 shadow-sm">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Reach</span>
+<select class="border-none bg-transparent py-0 pl-1 pr-8 text-sm font-medium focus:ring-0 cursor-pointer">
+<option>Any Reach</option>
+<option>10k - 50k</option>
+<option>50k - 200k</option>
+<option>200k+</option>
+</select>
+</div>
+<div class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 shadow-sm">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Engagement</span>
+<select class="border-none bg-transparent py-0 pl-1 pr-8 text-sm font-medium focus:ring-0 cursor-pointer">
+<option>All Rates</option>
+<option>&gt; 2%</option>
+<option>&gt; 5%</option>
+<option>&gt; 8%</option>
+</select>
+</div>
+<button class="ml-auto flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-lg text-sm font-bold shadow-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-lg">tune</span>
+                        Advanced Filters
+                    </button>
+</section>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<div class="profile-card group relative bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm hover:shadow-xl transition-all">
+<div class="flex flex-col items-center text-center">
+<div class="relative mb-4">
+<img class="size-24 rounded-full object-cover border-4 border-slate-50 dark:border-slate-800" data-alt="Smiling female lifestyle influencer portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0TpzAH2Ot3RLe38YOQwrDrHhtVTsyk8SUnPlqiBiSPw_JRwMQNYQF4i4CANWZ9ykAk_adNCUlLLWrKeuvW1w5S9IE0YYcqxzjPgmJovIAA_fvRWnfnSkRfI4_BtYtT4AawnRzdZrgATI1MQVAcMtGx0aGuAlqux-yBa8TyL11Mel5VTwQKzpz-rQzRyNoczv2a6prXfl-y2_KW7ptLpqxQHR74BMwTeWEBJmNh-kYTm2Y1pCQQNFEh5WdjD0h6BKyG8kzM5KbEacy"/>
+<div class="absolute bottom-0 right-0 bg-green-500 size-5 rounded-full border-2 border-white dark:border-slate-900"></div>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">Alex Rivera</h3>
+<div class="mt-2 flex flex-wrap justify-center gap-1.5">
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Lifestyle</span>
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Tech</span>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-3 border-y border-slate-100 dark:border-slate-800 py-4">
+<div class="text-center">
+<p class="text-xs text-slate-500">Followers</p>
+<p class="text-sm font-bold">500k</p>
+</div>
+<div class="text-center border-x border-slate-100 dark:border-slate-800 px-2">
+<p class="text-xs text-slate-500">Avg. Likes</p>
+<p class="text-sm font-bold">12.4k</p>
+</div>
+<div class="text-center">
+<p class="text-xs text-slate-500">Eng.</p>
+<p class="text-sm font-bold text-green-600">4.2%</p>
+</div>
+</div>
+<div class="mt-6 flex flex-col gap-2">
+<button class="w-full py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">View Profile</button>
+<button class="card-hover-btn w-full py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/30 transition-all">Invite to Campaign</button>
+</div>
+</div>
+<div class="profile-card group relative bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm hover:shadow-xl transition-all">
+<div class="flex flex-col items-center text-center">
+<div class="relative mb-4">
+<img class="size-24 rounded-full object-cover border-4 border-slate-50 dark:border-slate-800" data-alt="Male fashion influencer portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArlYD8VXjjvNPmu9ADaTR-obNGhHvZAx0aIBKviKARTUsJ7s7l4-IPRnQ2z798GNDfTDFGm20p0Q-yLsZo9j9zs6c3lx15Mwn6YhOP26YYloHKLWW-u6FHbnXfLFBKNDIg-8ZXzA0eayZ3PcOor1shFMM8hNfVkexRI6F0aaA5YFnnjyhyfzFFa0053xgwtLDyvVSVaqPfVSG_n8CNc0wS92uWb48ecu6m-3VsrHiRtNAmpqqjB-06WnW4M2VMPthR_La85q8JLix6"/>
+<div class="absolute bottom-0 right-0 bg-green-500 size-5 rounded-full border-2 border-white dark:border-slate-900"></div>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">Marcus Jordan</h3>
+<div class="mt-2 flex flex-wrap justify-center gap-1.5">
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Fitness</span>
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Health</span>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-3 border-y border-slate-100 dark:border-slate-800 py-4">
+<div class="text-center">
+<p class="text-xs text-slate-500">Followers</p>
+<p class="text-sm font-bold">250k</p>
+</div>
+<div class="text-center border-x border-slate-100 dark:border-slate-800 px-2">
+<p class="text-xs text-slate-500">Avg. Likes</p>
+<p class="text-sm font-bold">9.1k</p>
+</div>
+<div class="text-center">
+<p class="text-xs text-slate-500">Eng.</p>
+<p class="text-sm font-bold text-green-600">5.1%</p>
+</div>
+</div>
+<div class="mt-6 flex flex-col gap-2">
+<button class="w-full py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">View Profile</button>
+<button class="card-hover-btn w-full py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/30 transition-all">Invite to Campaign</button>
+</div>
+</div>
+<div class="profile-card group relative bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm hover:shadow-xl transition-all">
+<div class="flex flex-col items-center text-center">
+<div class="relative mb-4">
+<img class="size-24 rounded-full object-cover border-4 border-slate-50 dark:border-slate-800" data-alt="Travel influencer female portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnvVwZc2JvUFfOqXZgIeFp6wu3jzpdyF0KBy03JkMLgpg6zBf6LzVjHnNMoKRgzwR61BvW-t4zKcubXqmrxsMhS-ixbOrgW0wqBl9ELzR5ImMcWERdbnpjpwMEjPC4r6aw_8aGVF5PXe-vGKH8G2bgzL7138faRZUGfG5X_hahhO_RxJ_9hvmo_VDSza3HwSlx5rLUC4AeK9DOQ0-81sC2dRjkGq-aObkV1f18MjFcZIMlwSTCtZXhMMuVqUXJ_CkK-7zx0wnDJN2G"/>
+<div class="absolute bottom-0 right-0 bg-slate-300 size-5 rounded-full border-2 border-white dark:border-slate-900"></div>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">Elena Rodriguez</h3>
+<div class="mt-2 flex flex-wrap justify-center gap-1.5">
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Travel</span>
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Food</span>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-3 border-y border-slate-100 dark:border-slate-800 py-4">
+<div class="text-center">
+<p class="text-xs text-slate-500">Followers</p>
+<p class="text-sm font-bold">800k</p>
+</div>
+<div class="text-center border-x border-slate-100 dark:border-slate-800 px-2">
+<p class="text-xs text-slate-500">Avg. Likes</p>
+<p class="text-sm font-bold">23.2k</p>
+</div>
+<div class="text-center">
+<p class="text-xs text-slate-500">Eng.</p>
+<p class="text-sm font-bold text-amber-600">2.9%</p>
+</div>
+</div>
+<div class="mt-6 flex flex-col gap-2">
+<button class="w-full py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">View Profile</button>
+<button class="card-hover-btn w-full py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/30 transition-all">Invite to Campaign</button>
+</div>
+</div>
+<div class="profile-card group relative bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm hover:shadow-xl transition-all">
+<div class="flex flex-col items-center text-center">
+<div class="relative mb-4">
+<img class="size-24 rounded-full object-cover border-4 border-slate-50 dark:border-slate-800" data-alt="Portrait of a female beauty creator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHB969o-jWKQG6--_SU79su8CPgu3bcE34m_F57aXQAaer4WSrlommiG31SQAuR8tj4kKF5gKr1Smpo62BhufXjCqDbeuAp3ClHsaZyudII4JL9CBZnw4RIiwA5K3sgzsYmMrWgNLM1Y9rLL4ozgUO-IFU4OyQZY56q_PLoeO7qouNaFbu0q1t-zEwiSjPfzz86tAZe5kVJtnEwnGvg-AHAmOV0Fa1-uR7v-GEu4-QydXaVc5FLQn6D2qQL1m7e1RIYRXfIwiDH9MI"/>
+<div class="absolute bottom-0 right-0 bg-green-500 size-5 rounded-full border-2 border-white dark:border-slate-900"></div>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">Sophia Chen</h3>
+<div class="mt-2 flex flex-wrap justify-center gap-1.5">
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Beauty</span>
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Fashion</span>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-3 border-y border-slate-100 dark:border-slate-800 py-4">
+<div class="text-center">
+<p class="text-xs text-slate-500">Followers</p>
+<p class="text-sm font-bold">1.2M</p>
+</div>
+<div class="text-center border-x border-slate-100 dark:border-slate-800 px-2">
+<p class="text-xs text-slate-500">Avg. Likes</p>
+<p class="text-sm font-bold">45.6k</p>
+</div>
+<div class="text-center">
+<p class="text-xs text-slate-500">Eng.</p>
+<p class="text-sm font-bold text-green-600">3.8%</p>
+</div>
+</div>
+<div class="mt-6 flex flex-col gap-2">
+<button class="w-full py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">View Profile</button>
+<button class="card-hover-btn w-full py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/30 transition-all">Invite to Campaign</button>
+</div>
+</div>
+<div class="profile-card group relative bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm hover:shadow-xl transition-all">
+<div class="flex flex-col items-center text-center">
+<div class="relative mb-4">
+<img class="size-24 rounded-full object-cover border-4 border-slate-50 dark:border-slate-800" data-alt="Gamer male influencer avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDu2tfr3Q5Hy03LfBXNFHVtPalKbYwzY2jfMnIPnkClEqtbn4ch9j3tS6ReNKwoQ2a-X8Hv2cTdFfJ-bsn3hNv5DeFErPf6ScqIEj60kEAHBUOeTeLjUPirv-GPCQRFZG3OR9rS_8ikupqqDs_aiXGb6f7u3JjZsWfZyKXB_qIGjz9dHZMtEw0bp_QCPaj9Y2xXDpYYI3k3PtGQ1LAQ74z0gH3ZH2kVKXklYNskyFWmAbNtl80yV46xObvPkfj2EL3JCwToOF8t6d8x"/>
+<div class="absolute bottom-0 right-0 bg-green-500 size-5 rounded-full border-2 border-white dark:border-slate-900"></div>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">Jordan Smith</h3>
+<div class="mt-2 flex flex-wrap justify-center gap-1.5">
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Gaming</span>
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Tech</span>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-3 border-y border-slate-100 dark:border-slate-800 py-4">
+<div class="text-center">
+<p class="text-xs text-slate-500">Followers</p>
+<p class="text-sm font-bold">150k</p>
+</div>
+<div class="text-center border-x border-slate-100 dark:border-slate-800 px-2">
+<p class="text-xs text-slate-500">Avg. Likes</p>
+<p class="text-sm font-bold">9.8k</p>
+</div>
+<div class="text-center">
+<p class="text-xs text-slate-500">Eng.</p>
+<p class="text-sm font-bold text-green-600">6.5%</p>
+</div>
+</div>
+<div class="mt-6 flex flex-col gap-2">
+<button class="w-full py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">View Profile</button>
+<button class="card-hover-btn w-full py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/30 transition-all">Invite to Campaign</button>
+</div>
+</div>
+<div class="profile-card group relative bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm hover:shadow-xl transition-all">
+<div class="flex flex-col items-center text-center">
+<div class="relative mb-4">
+<img class="size-24 rounded-full object-cover border-4 border-slate-50 dark:border-slate-800" data-alt="Artist and designer female influencer avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTk72CXOMKpKb46WLkUGlhHWrelga1Em2T2q7ZDOmGxb_vONX9ofrrRKwszxYEHuYPNeCrQ22Cgib68VT9B5lJRt0DqxJmGQGHcFWY_FKC742_VQYsN2e4dhKx_TBpamAtUf7yiHjebORfFpUHNxEelRKcEreGJDDOpu2PyJc6FxErUqa69B_bvqtLOvj_fvTuXA2pFTJhmJ1b5B0Fva77K7F_w3_u0UQze2AR0uW0xrb2SfIW34US5NRDBy8jhK4WefyHvjj6w7yx"/>
+<div class="absolute bottom-0 right-0 bg-slate-300 size-5 rounded-full border-2 border-white dark:border-slate-900"></div>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">Taylor Wong</h3>
+<div class="mt-2 flex flex-wrap justify-center gap-1.5">
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Art</span>
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Design</span>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-3 border-y border-slate-100 dark:border-slate-800 py-4">
+<div class="text-center">
+<p class="text-xs text-slate-500">Followers</p>
+<p class="text-sm font-bold">420k</p>
+</div>
+<div class="text-center border-x border-slate-100 dark:border-slate-800 px-2">
+<p class="text-xs text-slate-500">Avg. Likes</p>
+<p class="text-sm font-bold">16.8k</p>
+</div>
+<div class="text-center">
+<p class="text-xs text-slate-500">Eng.</p>
+<p class="text-sm font-bold text-green-600">4.0%</p>
+</div>
+</div>
+<div class="mt-6 flex flex-col gap-2">
+<button class="w-full py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">View Profile</button>
+<button class="card-hover-btn w-full py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/30 transition-all">Invite to Campaign</button>
+</div>
+</div>
+<div class="profile-card group relative bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm hover:shadow-xl transition-all">
+<div class="flex flex-col items-center text-center">
+<div class="relative mb-4">
+<img class="size-24 rounded-full object-cover border-4 border-slate-50 dark:border-slate-800" data-alt="Musician male influencer avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBIOwbS7eiBK3OOPiFSbRigXXD5FsZBr61p137niS5ShFVkojSSk0yeGT_XEVfLrCBG7wNBfSabG5vdZXa2RdwF2UkS-bJGn2RNkpuwF-axcd_F8x11X4DkHG1c8QjBJAUOlogwWF_ySDQnniJ4tiNBnxg2gx5p3MN_eu5geOIDlSQBmX6Fe6UOTlImL6Lg9Wa64UN3oJj_Eeo8wWYKbA_dLqAQKKOZFP0uqZB1qjC72NQNF_PbZO1I5L5mzkBd9P-_jcqEXpT4Wkz"/>
+<div class="absolute bottom-0 right-0 bg-green-500 size-5 rounded-full border-2 border-white dark:border-slate-900"></div>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">Chris Evans</h3>
+<div class="mt-2 flex flex-wrap justify-center gap-1.5">
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Music</span>
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Ent.</span>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-3 border-y border-slate-100 dark:border-slate-800 py-4">
+<div class="text-center">
+<p class="text-xs text-slate-500">Followers</p>
+<p class="text-sm font-bold">2.1M</p>
+</div>
+<div class="text-center border-x border-slate-100 dark:border-slate-800 px-2">
+<p class="text-xs text-slate-500">Avg. Likes</p>
+<p class="text-sm font-bold">31.5k</p>
+</div>
+<div class="text-center">
+<p class="text-xs text-slate-500">Eng.</p>
+<p class="text-sm font-bold text-slate-600">1.5%</p>
+</div>
+</div>
+<div class="mt-6 flex flex-col gap-2">
+<button class="w-full py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">View Profile</button>
+<button class="card-hover-btn w-full py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/30 transition-all">Invite to Campaign</button>
+</div>
+</div>
+<div class="profile-card group relative bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm hover:shadow-xl transition-all">
+<div class="flex flex-col items-center text-center">
+<div class="relative mb-4">
+<img class="size-24 rounded-full object-cover border-4 border-slate-50 dark:border-slate-800" data-alt="Business woman finance expert avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3HW-E5uM5imBykIHviWgzllSz21-g_zT7GA27AsecuZcgWSG1Q0qi_8wQKK5_yaOQkT78elwgAeJt4QrXYc0uNds8w_v2UCC9EKES_62YkJF12HCSqDR-peXhhFAdH7bIJD_B_CXIfOzfesVf16phSTukZ0bLbjfxde89nYgQ1sxfRWvPnZXz0Zkg3HGw2oSAKcYeKYAgQF7OY2l6eSMeN4kYlRm9F91rDZnHbOjMYjwhfwDkC3Rs1AV5jPOGAIjRQR7M_K3P08db"/>
+<div class="absolute bottom-0 right-0 bg-green-500 size-5 rounded-full border-2 border-white dark:border-slate-900"></div>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">Maya Patel</h3>
+<div class="mt-2 flex flex-wrap justify-center gap-1.5">
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Business</span>
+<span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Finance</span>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-3 border-y border-slate-100 dark:border-slate-800 py-4">
+<div class="text-center">
+<p class="text-xs text-slate-500">Followers</p>
+<p class="text-sm font-bold">330k</p>
+</div>
+<div class="text-center border-x border-slate-100 dark:border-slate-800 px-2">
+<p class="text-xs text-slate-500">Avg. Likes</p>
+<p class="text-sm font-bold">15.8k</p>
+</div>
+<div class="text-center">
+<p class="text-xs text-slate-500">Eng.</p>
+<p class="text-sm font-bold text-green-600">4.8%</p>
+</div>
+</div>
+<div class="mt-6 flex flex-col gap-2">
+<button class="w-full py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">View Profile</button>
+<button class="card-hover-btn w-full py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/30 transition-all">Invite to Campaign</button>
+</div>
+</div>
+</div>
+<div class="mt-12 flex items-center justify-center gap-2">
+<button class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button class="h-10 w-10 rounded-lg bg-primary text-white font-bold text-sm">1</button>
+<button class="h-10 w-10 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-sm transition-colors">2</button>
+<button class="h-10 w-10 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-sm transition-colors">3</button>
+<span class="px-2 text-slate-400">...</span>
+<button class="h-10 w-10 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-sm transition-colors">12</button>
+<button class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+<aside class="w-80 border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 flex flex-col shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h2 class="text-lg font-bold">Saved Creators</h2>
+<p class="text-xs text-slate-500">12 creators in your list</p>
+</div>
+<button class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+</div>
+<div class="space-y-4 flex-1 overflow-y-auto">
+<div class="flex items-center gap-3 group">
+<img class="size-10 rounded-full object-cover border border-slate-100 dark:border-slate-800" data-alt="Saved creator small thumbnail 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASWmkRRrjQYePbpALq0uoeDli7cNXtb1lFtlAsT_bpb5h_lQ-50Y9GqmgDf_tX3k5rdfSgtynAPLQQRJIqzfvJUZmN1i1bUOz7_JkbEg4zlSzVukniemm72vml63poSjx7ZMhLf3FR_pi8R1-i-3vjg4TAf2utAn0cWepE9GkOpbCczYeZgu9BM4yu_vMZoCtND9nj_YjZQ3Ysppi28csn9ihlzd7zm0TYApPMa1HYb1lzvt33Q7IGdtWFXxpF-nbLUjjHjYnObY0w"/>
+<div class="flex-1">
+<p class="text-sm font-semibold">Sophia Chen</p>
+<p class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Beauty • 1.2M</p>
+</div>
+<button class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-500 transition-all">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+<div class="flex items-center gap-3 group">
+<img class="size-10 rounded-full object-cover border border-slate-100 dark:border-slate-800" data-alt="Saved creator small thumbnail 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv8B45aMvLasP9_qrVAVOvxos1lIfeld4kmQTYDLopcqnIHPi8XrRI8Ja-oSHTatBtHdqCvLp2bLWqyfq_chIINqdb1k-ADs1tEs-e5fNGEgmRME3SMafVGLP8yDaw9jHglEDZyjRjgGW0TYL7OdN8wFKJ2BonxAtscPv_meslyAIDc1sBGBITM6N_DY5tPVvrF3I_7JBcFzzFSkRbFGZp5bh6sChpVFttAn9m8Pxt9cI1-Kaaw8xfPHKawlk4E21VFZU-do9Vcq5I"/>
+<div class="flex-1">
+<p class="text-sm font-semibold">Jordan Smith</p>
+<p class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Gaming • 150k</p>
+</div>
+<button class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-500 transition-all">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+<div class="flex items-center gap-3 group">
+<img class="size-10 rounded-full object-cover border border-slate-100 dark:border-slate-800" data-alt="Saved creator small thumbnail 3" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC15IRbIz0GvAh3D_kIYqyWa4AHB7GscLuCAQqt_kDyIDS0Yon6bZwi-ngCLBE3wwGdlTejNGh-hRCnaULw60JPvMeZSWsE8Ij4l8gsIZ8BaVjUUzed_i8HQQG9UDc6NPc4H2EEZ7BF8keuccsDbYje02T8kCZE_eWsIy8rRSL3IZAcljKkV81JN9xjwT7ru13L1fqZDF27JUBILA8IDBmg-RP6xdL-wNUK9WWy703x7KuyODH-Fdl47RoXYYUYLX6kmmbBXCbZcYin"/>
+<div class="flex-1">
+<p class="text-sm font-semibold">Alex Rivera</p>
+<p class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Lifestyle • 500k</p>
+</div>
+<button class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-500 transition-all">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+</div>
+<div class="mt-6 space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+<button class="w-full flex items-center justify-center gap-2 py-2.5 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:opacity-95 transition-opacity">
+<span class="material-symbols-outlined text-lg">send</span>
+                        Bulk Campaign Invite
+                    </button>
+<button class="w-full py-2.5 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                        Create New Collection
+                    </button>
+</div>
+</aside>
+</main>
+</div>
+</body></html>

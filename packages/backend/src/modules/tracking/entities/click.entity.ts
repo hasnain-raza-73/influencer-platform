@@ -7,6 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { TrackingLink } from './tracking-link.entity';
+import { Product } from '../../products/product.entity';
 
 @Entity('clicks')
 export class Click {
@@ -15,6 +16,9 @@ export class Click {
 
   @Column()
   tracking_link_id: string;
+
+  @Column({ type: 'uuid', nullable: true })
+  product_id?: string;
 
   @Column({ length: 45, nullable: true })
   ip_address?: string;
@@ -37,4 +41,8 @@ export class Click {
   @ManyToOne(() => TrackingLink)
   @JoinColumn({ name: 'tracking_link_id' })
   tracking_link: TrackingLink;
+
+  @ManyToOne(() => Product, { nullable: true })
+  @JoinColumn({ name: 'product_id' })
+  product?: Product;
 }

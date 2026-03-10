@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Brand Registration | InfluencerPlatform</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex min-h-screen">
+<!-- Left Side: Testimonial & Benefits (40%) -->
+<div class="hidden lg:flex lg:w-[40%] bg-primary p-12 flex-col justify-between text-white relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+<div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-white blur-3xl"></div>
+<div class="absolute bottom-0 right-0 w-64 h-64 rounded-full bg-white blur-2xl"></div>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-16">
+<span class="material-symbols-outlined text-3xl">hub</span>
+<span class="text-xl font-bold tracking-tight">InfluencerPlatform</span>
+</div>
+<div class="space-y-8">
+<div class="space-y-4">
+<span class="material-symbols-outlined text-4xl opacity-50">format_quote</span>
+<p class="text-2xl font-medium leading-relaxed italic">
+                            "The most efficient way to manage influencer campaigns at scale. It transformed our ROI tracking overnight."
+                        </p>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/30 border border-white/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">person</span>
+</div>
+<div>
+<p class="font-bold text-sm">Sarah Jenkins</p>
+<p class="text-xs opacity-80 uppercase tracking-wider">Marketing Director, Global Retail</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="relative z-10">
+<ul class="space-y-6">
+<li class="flex items-center gap-4 group">
+<div class="p-2 bg-white/10 rounded-lg group-hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined">group</span>
+</div>
+<span class="text-lg font-medium">Access to 10M+ creators</span>
+</li>
+<li class="flex items-center gap-4 group">
+<div class="p-2 bg-white/10 rounded-lg group-hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<span class="text-lg font-medium">Real-time ROI tracking</span>
+</li>
+<li class="flex items-center gap-4 group">
+<div class="p-2 bg-white/10 rounded-lg group-hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined">description</span>
+</div>
+<span class="text-lg font-medium">Automated contracting</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Right Side: Registration Form (60%) -->
+<div class="w-full lg:w-[60%] flex items-center justify-center p-8 bg-white dark:bg-slate-900">
+<div class="w-full max-w-xl space-y-8">
+<div class="space-y-2">
+<h1 class="text-3xl font-black text-slate-900 dark:text-white">Create Brand Account</h1>
+<p class="text-slate-500 dark:text-slate-400">Join thousands of brands growing with our platform.</p>
+</div>
+<form class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Full Name</label>
+<input class="w-full h-12 px-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder:text-slate-400" placeholder="Enter your full name" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Work Email</label>
+<input class="w-full h-12 px-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder:text-slate-400" placeholder="name@company.com" type="email"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Company Name</label>
+<input class="w-full h-12 px-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder:text-slate-400" placeholder="Enter brand name" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Website URL</label>
+<input class="w-full h-12 px-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder:text-slate-400" placeholder="https://example.com" type="url"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Monthly Marketing Budget</label>
+<select class="w-full h-12 px-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer">
+<option disabled="" selected="" value="">Select budget range</option>
+<option value="1k-5k">$1,000 - $5,000</option>
+<option value="5k-20k">$5,000 - $20,000</option>
+<option value="20k-50k">$20,000 - $50,000</option>
+<option value="50k+">$50,000+</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
+<div class="relative">
+<input class="w-full h-12 px-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder:text-slate-400" placeholder="Min. 8 characters" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary" type="button">
+<span class="material-symbols-outlined text-sm">visibility</span>
+</button>
+</div>
+<!-- Strength Meter -->
+<div class="pt-2">
+<div class="flex gap-1 h-1">
+<div class="flex-1 bg-primary rounded-full"></div>
+<div class="flex-1 bg-primary rounded-full"></div>
+<div class="flex-1 bg-primary rounded-full"></div>
+<div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+</div>
+<p class="text-[10px] text-slate-500 mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] text-green-500">check_circle</span>
+                                Password strength: <span class="font-bold text-slate-700 dark:text-slate-300">Strong</span>
+</p>
+</div>
+</div>
+<div class="pt-4">
+<button class="w-full h-14 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20" type="submit">
+                            Create Brand Account
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<p class="text-center text-sm text-slate-500 dark:text-slate-400 mt-6">
+                        By signing up, you agree to our 
+                        <a class="text-primary hover:underline font-medium" href="#">Terms of Service</a> 
+                        and 
+                        <a class="text-primary hover:underline font-medium" href="#">Privacy Policy</a>.
+                    </p>
+<div class="text-center pt-4">
+<p class="text-sm text-slate-600 dark:text-slate-400">
+                            Already have an account? 
+                            <a class="text-primary font-bold hover:underline" href="#">Sign In</a>
+</p>
+</div>
+</form>
+</div>
+</div>
+</div>
+</body></html>

@@ -93,4 +93,17 @@ export class AnalyticsController {
       },
     };
   }
+
+  // Admin: Get platform-wide analytics
+  @Get('admin/platform')
+  @Roles(UserRole.ADMIN)
+  @HttpCode(HttpStatus.OK)
+  async getAdminPlatformAnalytics(@Query() filter: AnalyticsFilterDto) {
+    const analytics = await this.analyticsService.getAdminPlatformAnalytics(filter);
+
+    return {
+      success: true,
+      data: analytics,
+    };
+  }
 }

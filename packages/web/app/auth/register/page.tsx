@@ -3,14 +3,13 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Mail, Lock, Eye, EyeOff, User, Building2, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card } from '@/components/ui/card'
 import { useAuthStore } from '@/store/auth-store'
 import { authService } from '@/services/auth-service'
 import { UserRole } from '@/types'
 import { ApiError } from '@/lib/api-client'
+import { BrandRegistrationForm } from '@/components/auth/BrandRegistrationForm'
+import { CreatorRegistrationForm } from '@/components/auth/CreatorRegistrationForm'
 
 type Step = 'role' | 'details'
 
@@ -20,7 +19,6 @@ export default function RegisterPage() {
 
   const [step, setStep] = useState<Step>('role')
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null)
-  const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -132,259 +130,148 @@ export default function RegisterPage() {
   // Role Selection Step
   if (step === 'role') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-4xl">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              Join Our Platform
-            </h1>
-            <p className="text-gray-600">
-              Choose how you want to get started
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Brand Card */}
-            <Card
-              variant="bordered"
-              padding="lg"
-              className="cursor-pointer hover:border-primary-500 hover:shadow-medium transition-all duration-200 group"
-              onClick={() => handleRoleSelect(UserRole.BRAND)}
-            >
-              <div className="flex flex-col items-center text-center space-y-4">
-                <div className="w-20 h-20 rounded-full bg-primary-100 flex items-center justify-center group-hover:bg-primary-200 transition-colors">
-                  <Building2 className="w-10 h-10 text-primary-600" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    I&apos;m a Brand
-                  </h3>
-                  <p className="text-gray-600">
-                    Find influencers to promote your products and grow your business
-                  </p>
-                </div>
-                <ul className="text-sm text-gray-600 space-y-2 text-left w-full">
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 bg-primary-600 rounded-full mr-2" />
-                    Create and manage campaigns
-                  </li>
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 bg-primary-600 rounded-full mr-2" />
-                    Track conversions and ROI
-                  </li>
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 bg-primary-600 rounded-full mr-2" />
-                    Connect with top influencers
-                  </li>
-                </ul>
-                <Button variant="primary" size="lg" className="w-full">
-                  Sign up as Brand
-                </Button>
+      <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-background-light dark:bg-background-dark">
+        <div className="layout-container flex h-full grow flex-col">
+          {/* Header */}
+          <header className="flex items-center justify-between border-b border-primary/10 px-10 py-4 bg-white dark:bg-slate-900">
+            <div className="flex items-center gap-2">
+              <div className="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+                <span className="material-symbols-outlined">hub</span>
               </div>
-            </Card>
-
-            {/* Influencer Card */}
-            <Card
-              variant="bordered"
-              padding="lg"
-              className="cursor-pointer hover:border-secondary-500 hover:shadow-medium transition-all duration-200 group"
-              onClick={() => handleRoleSelect(UserRole.INFLUENCER)}
-            >
-              <div className="flex flex-col items-center text-center space-y-4">
-                <div className="w-20 h-20 rounded-full bg-secondary-100 flex items-center justify-center group-hover:bg-secondary-200 transition-colors">
-                  <Sparkles className="w-10 h-10 text-secondary-600" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    I&apos;m an Influencer
-                  </h3>
-                  <p className="text-gray-600">
-                    Monetize your audience by promoting products you love
-                  </p>
-                </div>
-                <ul className="text-sm text-gray-600 space-y-2 text-left w-full">
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 bg-secondary-600 rounded-full mr-2" />
-                    Earn commission on sales
-                  </li>
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 bg-secondary-600 rounded-full mr-2" />
-                    Access exclusive campaigns
-                  </li>
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 bg-secondary-600 rounded-full mr-2" />
-                    Track your performance
-                  </li>
-                </ul>
-                <Button variant="secondary" size="lg" className="w-full">
-                  Sign up as Influencer
-                </Button>
-              </div>
-            </Card>
-          </div>
-
-          <p className="text-center text-sm text-gray-500 mt-8">
-            Already have an account?{' '}
-            <Link
-              href="/auth/login"
-              className="text-primary-600 hover:text-primary-700 font-semibold"
-            >
-              Sign In
+              <h2 className="text-slate-900 dark:text-slate-100 text-xl font-bold leading-tight tracking-tight">
+                InfluencerPlatform
+              </h2>
+            </div>
+            <Link href="/auth/login">
+              <Button variant="primary" size="sm" className="bg-primary text-white hover:bg-primary/90">
+                Sign In
+              </Button>
             </Link>
-          </p>
+          </header>
+
+          {/* Main Content */}
+          <main className="flex flex-1 flex-col items-center justify-center px-4 py-12">
+            <div className="max-w-[800px] w-full text-center space-y-4 mb-12">
+              <h1 className="text-slate-900 dark:text-slate-100 text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
+                Join the future of influence
+              </h1>
+              <p className="text-slate-500 dark:text-slate-400 text-lg max-w-[600px] mx-auto">
+                Whether you&apos;re looking to scale your brand or monetize your content, we&apos;ve got the tools to help you succeed.
+              </p>
+            </div>
+
+            {/* Account Selection Cards */}
+            <div className="grid md:grid-cols-2 gap-8 w-full max-w-[900px] px-4">
+              {/* Brand Card */}
+              <div
+                onClick={() => handleRoleSelect(UserRole.BRAND)}
+                className="group flex flex-col bg-white dark:bg-slate-900 p-8 rounded-xl border border-primary/10 shadow-sm hover:shadow-md hover:border-primary/30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-300 cursor-pointer"
+              >
+                <div className="size-14 bg-primary/10 rounded-lg flex items-center justify-center text-primary mb-6">
+                  <span className="material-symbols-outlined text-3xl">business_center</span>
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">I am a Brand</h3>
+                <p className="text-slate-500 dark:text-slate-400 mb-6 min-h-[48px]">
+                  Grow your business by partnering with the right creators for your niche.
+                </p>
+                <ul className="space-y-3 mb-10 flex-grow">
+                  <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+                    <span className="material-symbols-outlined text-primary text-xl">check_circle</span>
+                    <span>Search 100k+ vetted creators</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+                    <span className="material-symbols-outlined text-primary text-xl">check_circle</span>
+                    <span>Real-time ROI tracking</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+                    <span className="material-symbols-outlined text-primary text-xl">check_circle</span>
+                    <span>Seamless campaign management</span>
+                  </li>
+                </ul>
+                <button className="w-full py-3 px-6 rounded-lg border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-all">
+                  Get Started as Brand
+                </button>
+              </div>
+
+              {/* Influencer Card */}
+              <div
+                onClick={() => handleRoleSelect(UserRole.INFLUENCER)}
+                className="group flex flex-col bg-white dark:bg-slate-900 p-8 rounded-xl border border-primary/10 shadow-sm hover:shadow-md hover:border-primary/30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-300 cursor-pointer"
+              >
+                <div className="size-14 bg-primary/10 rounded-lg flex items-center justify-center text-primary mb-6">
+                  <span className="material-symbols-outlined text-3xl">photo_camera</span>
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">I am an Influencer</h3>
+                <p className="text-slate-500 dark:text-slate-400 mb-6 min-h-[48px]">
+                  Monetize your audience and build lasting relationships with top brands.
+                </p>
+                <ul className="space-y-3 mb-10 flex-grow">
+                  <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+                    <span className="material-symbols-outlined text-primary text-xl">check_circle</span>
+                    <span>Find relevant brand partnerships</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+                    <span className="material-symbols-outlined text-primary text-xl">check_circle</span>
+                    <span>Manage earnings and payouts</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+                    <span className="material-symbols-outlined text-primary text-xl">check_circle</span>
+                    <span>Professional media kit builder</span>
+                  </li>
+                </ul>
+                <button className="w-full py-3 px-6 rounded-lg border-2 border-primary/40 text-slate-700 dark:text-slate-200 font-bold hover:border-primary hover:bg-primary/5 transition-all">
+                  Get Started as Influencer
+                </button>
+              </div>
+            </div>
+
+            {/* Footer Link */}
+            <div className="mt-12 text-center">
+              <p className="text-slate-500 dark:text-slate-400">
+                Already have an account?{' '}
+                <Link href="/auth/login" className="text-primary font-semibold hover:underline ml-1">
+                  Sign in
+                </Link>
+              </p>
+            </div>
+          </main>
+
+          {/* Visual Decorative Element (Background) */}
+          <div className="fixed top-0 left-0 w-full h-full -z-10 opacity-30 pointer-events-none">
+            <div className="absolute top-[10%] left-[5%] w-64 h-64 bg-primary rounded-full blur-[100px] mix-blend-multiply"></div>
+            <div className="absolute bottom-[10%] right-[5%] w-96 h-96 bg-primary/40 rounded-full blur-[120px] mix-blend-multiply"></div>
+          </div>
         </div>
       </div>
     )
   }
 
   // Registration Form Step
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <button
-            onClick={() => setStep('role')}
-            className="text-sm text-gray-600 hover:text-gray-900 mb-4"
-          >
-            ← Change role
-          </button>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Create Account
-          </h1>
-          <p className="text-gray-600">
-            Sign up as a {selectedRole === UserRole.BRAND ? 'Brand' : 'Influencer'}
-          </p>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-medium p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-sm text-red-600">{error}</p>
-              </div>
-            )}
-
-            <Input
-              label="Email Address"
-              type="email"
-              required
-              leftIcon={<Mail className="w-5 h-5" />}
-              placeholder="you@example.com"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-            />
-
-            <Input
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-              required
-              leftIcon={<Lock className="w-5 h-5" />}
-              rightIcon={
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
-                </button>
-              }
-              placeholder="••••••••"
-              helperText="Must be at least 8 characters"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-            />
-
-            <Input
-              label="Confirm Password"
-              type={showPassword ? 'text' : 'password'}
-              required
-              leftIcon={<Lock className="w-5 h-5" />}
-              placeholder="••••••••"
-              value={formData.confirmPassword}
-              onChange={(e) =>
-                setFormData({ ...formData, confirmPassword: e.target.value })
-              }
-            />
-
-            {selectedRole === UserRole.BRAND ? (
-              <>
-                <Input
-                  label="Company Name"
-                  type="text"
-                  required
-                  leftIcon={<Building2 className="w-5 h-5" />}
-                  placeholder="Acme Inc."
-                  value={formData.company_name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, company_name: e.target.value })
-                  }
-                />
-                <Input
-                  label="Website"
-                  type="url"
-                  leftIcon={<span className="text-xs">🌐</span>}
-                  placeholder="https://example.com"
-                  value={formData.website}
-                  onChange={(e) =>
-                    setFormData({ ...formData, website: e.target.value })
-                  }
-                />
-              </>
-            ) : (
-              <>
-                <Input
-                  label="Display Name"
-                  type="text"
-                  required
-                  leftIcon={<User className="w-5 h-5" />}
-                  placeholder="Your Name"
-                  value={formData.display_name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, display_name: e.target.value })
-                  }
-                />
-                <Input
-                  label="Instagram Handle (Optional)"
-                  type="text"
-                  leftIcon={<span className="text-xs">📸</span>}
-                  placeholder="@yourusername"
-                  value={formData.social_instagram}
-                  onChange={(e) =>
-                    setFormData({ ...formData, social_instagram: e.target.value })
-                  }
-                />
-              </>
-            )}
-
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              className="w-full"
-              isLoading={isLoading}
-            >
-              Create Account
-            </Button>
-          </form>
-        </div>
-
-        <p className="text-center text-sm text-gray-500 mt-8">
-          Already have an account?{' '}
-          <Link
-            href="/auth/login"
-            className="text-primary-600 hover:text-primary-700 font-semibold"
-          >
-            Sign In
-          </Link>
-        </p>
+  if (selectedRole === UserRole.BRAND) {
+    return (
+      <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center">
+        <BrandRegistrationForm
+          formData={formData}
+          onChange={setFormData}
+          onSubmit={handleSubmit}
+          onBack={() => setStep('role')}
+          isLoading={isLoading}
+          error={error}
+        />
       </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center">
+      <CreatorRegistrationForm
+        formData={formData}
+        onChange={setFormData}
+        onSubmit={handleSubmit}
+        onBack={() => setStep('role')}
+        isLoading={isLoading}
+        error={error}
+      />
     </div>
   )
 }

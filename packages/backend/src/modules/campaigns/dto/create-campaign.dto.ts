@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, IsOptional, IsEnum, IsNumber, IsDateString, IsArray, Min, Max } from 'class-validator';
-import { CampaignStatus } from '../entities/campaign.entity';
+import { CampaignStatus, CampaignType } from '../entities/campaign.entity';
 
 export class CreateCampaignDto {
   @IsString()
@@ -13,6 +13,10 @@ export class CreateCampaignDto {
   @IsEnum(CampaignStatus)
   @IsOptional()
   status?: CampaignStatus;
+
+  @IsEnum(CampaignType)
+  @IsOptional()
+  campaign_type?: CampaignType;
 
   @IsNumber()
   @Min(0)
@@ -41,6 +45,14 @@ export class CreateCampaignDto {
   @IsOptional()
   @Min(1)
   max_conversions?: number;
+
+  @IsString()
+  @IsOptional()
+  country?: string;
+
+  @IsString()
+  @IsOptional()
+  currency?: string;
 
   @IsArray()
   @IsOptional()

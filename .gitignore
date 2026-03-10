@@ -55,6 +55,7 @@ packages/mobile/ios/build/
 # Backend
 packages/backend/dist/
 packages/backend/.env
+packages/backend/.env.production
 
 # Database
 *.sqlite

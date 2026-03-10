@@ -2,20 +2,26 @@ import { Injectable, NotFoundException, BadRequestException, ConflictException }
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, MoreThan } from 'typeorm';
 import { TrackingLink } from './entities/tracking-link.entity';
+import { TrackingLinkProduct } from './entities/tracking-link-product.entity';
 import { Click } from './entities/click.entity';
 import { Conversion, ConversionStatus } from './entities/conversion.entity';
 import { Product } from '../products/product.entity';
 import { CreateTrackingLinkDto } from './dto/create-tracking-link.dto';
+import { CreateAdvancedLinkDto } from './dto/create-advanced-link.dto';
 import { TrackConversionDto } from './dto/track-conversion.dto';
 import { User, UserRole } from '../users/user.entity';
 import { randomBytes } from 'crypto';
 import { IntegrationsService } from '../integrations/integrations.service';
+import { SlugService } from './slug.service';
+import { QRCodeService } from './qrcode.service';
 
 @Injectable()
 export class TrackingService {
   constructor(
     @InjectRepository(TrackingLink)
     private readonly trackingLinkRepository: Repository<TrackingLink>,
+    @InjectRepository(TrackingLinkProduct)
+    private readonly linkProductRepository: Repository<TrackingLinkProduct>,
     @InjectRepository(Click)
     private readonly clickRepository: Repository<Click>,
     @InjectRepository(Conversion)
@@ -23,6 +29,8 @@ export class TrackingService {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
     private readonly integrationsService: IntegrationsService,
+    private readonly slugService: SlugService,
+    private readonly qrCodeService: QRCodeService,
   ) {}
 
   // Generate a unique tracking link for influencer + product
@@ -69,25 +77,189 @@ export class TrackingService {
     return await this.trackingLinkRepository.save(trackingLink);
   }
 
-  // Track a click and redirect to product
-  async trackClick(
-    uniqueCode: string,
-    ipAddress: string,
-    userAgent: string,
-    referrer?: string,
-  ): Promise<{ redirectUrl: string; trackingLinkId: string }> {
+  // Generate advanced tracking link with custom slug, multi-product, QR code, etc.
+  async generateAdvancedTrackingLink(
+    createDto: CreateAdvancedLinkDto,
+    user: User,
+    baseUrl: string,
+  ): Promise<TrackingLink> {
+    if (user.role !== UserRole.INFLUENCER) {
+      throw new BadRequestException('Only influencers can generate tracking links');
+    }
+
+    if (!user.influencer) {
+      throw new BadRequestException('Influencer profile not found');
+    }
+
+    // Validate: must have either single product or multiple products
+    if (!createDto.product_id && (!createDto.products || createDto.products.length === 0)) {
+      throw new BadRequestException('Must provide either product_id or products array');
+    }
+
+    if (createDto.product_id && createDto.products && createDto.products.length > 0) {
+      throw new BadRequestException('Cannot provide both product_id and products array');
+    }
+
+    // If custom slug provided, validate and check availability
+    if (createDto.custom_slug) {
+      const validation = this.slugService.validateSlugFormat(createDto.custom_slug);
+      if (!validation.valid) {
+        throw new BadRequestException(validation.error);
+      }
+
+      const availability = await this.slugService.checkAvailability(createDto.custom_slug);
+      if (!availability.available) {
+        throw new BadRequestException(
+          `Slug "${createDto.custom_slug}" is not available. Try: ${availability.suggestions?.join(', ')}`,
+        );
+      }
+    }
+
+    // Generate unique code
+    const uniqueCode = this.generateUniqueCode();
+
+    // Create tracking link
+    const trackingLink: TrackingLink = this.trackingLinkRepository.create({
+      influencer_id: user.influencer.id,
+      product_id: createDto.product_id || undefined,
+      unique_code: uniqueCode,
+      custom_slug: createDto.custom_slug
+        ? this.slugService.normalizeSlug(createDto.custom_slug)
+        : undefined,
+      is_bio_link: createDto.is_bio_link || false,
+      landing_page_config: createDto.landing_page_config || {},
+    });
+
+    const savedLink: TrackingLink = await this.trackingLinkRepository.save(trackingLink);
+
+    // If multi-product link, create junction table entries
+    if (createDto.products && createDto.products.length > 0) {
+      const linkProducts = createDto.products.map((p) =>
+        this.linkProductRepository.create({
+          tracking_link_id: savedLink.id,
+          product_id: p.product_id,
+          display_order: p.display_order,
+        }),
+      );
+
+      await this.linkProductRepository.save(linkProducts);
+    }
+
+    // Generate QR code if requested
+    if (createDto.generate_qr) {
+      const publicUrl = savedLink.getPublicUrl(baseUrl);
+      const qrDataUrl = await this.qrCodeService.generateDataURL(publicUrl, {
+        size: 400,
+        errorCorrectionLevel: 'M',
+      });
+
+      savedLink.qr_code_url = qrDataUrl;
+      await this.trackingLinkRepository.save(savedLink);
+    }
+
+    // Load relationships before returning
+    const linkWithRelations = await this.trackingLinkRepository.findOne({
+      where: { id: savedLink.id },
+      relations: ['product', 'link_products'],
+    });
+
+    if (!linkWithRelations) {
+      throw new NotFoundException('Tracking link not found after creation');
+    }
+
+    return linkWithRelations;
+  }
+
+  // Check if custom slug is available
+  async checkSlugAvailability(slug: string): Promise<{
+    available: boolean;
+    suggestions?: string[];
+  }> {
+    return await this.slugService.checkAvailability(slug);
+  }
+
+  // Generate QR code for an existing tracking link
+  async generateQRCodeForLink(
+    linkId: string,
+    userId: string,
+    baseUrl: string,
+  ): Promise<string> {
     const trackingLink = await this.trackingLinkRepository.findOne({
-      where: { unique_code: uniqueCode },
-      relations: ['product'],
+      where: { id: linkId },
     });
 
     if (!trackingLink) {
       throw new NotFoundException('Tracking link not found');
     }
 
-    // Record the click
+    // Verify ownership
+    if (trackingLink.influencer_id !== userId) {
+      throw new BadRequestException('You can only generate QR codes for your own links');
+    }
+
+    const publicUrl = trackingLink.getPublicUrl(baseUrl);
+    const qrDataUrl = await this.qrCodeService.generateDataURL(publicUrl, {
+      size: 500,
+      errorCorrectionLevel: 'H',
+    });
+
+    // Save QR code URL to database
+    trackingLink.qr_code_url = qrDataUrl;
+    await this.trackingLinkRepository.save(trackingLink);
+
+    return qrDataUrl;
+  }
+
+  // Track a click and redirect to product
+  async trackClick(
+    uniqueCode: string,
+    ipAddress: string,
+    userAgent: string,
+    referrer?: string,
+    productId?: string,
+  ): Promise<{ redirectUrl: string; trackingLinkId: string; isMultiProduct: boolean }> {
+    const trackingLink = await this.trackingLinkRepository.findOne({
+      where: { unique_code: uniqueCode },
+      relations: ['product', 'link_products'],
+    });
+
+    if (!trackingLink) {
+      throw new NotFoundException('Tracking link not found');
+    }
+
+    // For multi-product links, need to know which product was clicked
+    let targetProductId = trackingLink.product_id;
+    let redirectUrl = trackingLink.product?.product_url;
+
+    if (trackingLink.isMultiProduct()) {
+      if (!productId) {
+        throw new BadRequestException('Product ID required for multi-product links');
+      }
+
+      // Verify product is part of this link
+      const linkProduct = trackingLink.link_products.find(
+        (lp) => lp.product_id === productId,
+      );
+      if (!linkProduct) {
+        throw new BadRequestException('Product not found in this tracking link');
+      }
+
+      targetProductId = productId;
+
+      // Get product details for redirect
+      const product = await this.productRepository.findOne({
+        where: { id: productId },
+      });
+      if (!product) {
+        throw new NotFoundException('Product not found');
+      }
+      redirectUrl = product.product_url;
+    }
+
+    // Record the click with product_id for multi-product tracking
     const click = this.clickRepository.create({
       tracking_link_id: trackingLink.id,
+      product_id: targetProductId,
       ip_address: ipAddress,
       user_agent: userAgent,
       referrer: referrer,
@@ -96,14 +268,20 @@ export class TrackingService {
 
     await this.clickRepository.save(click);
 
+    // Ensure redirect URL is valid
+    if (!redirectUrl) {
+      throw new NotFoundException('Product URL not found for this tracking link');
+    }
+
     // Update tracking link stats
     trackingLink.clicks += 1;
     trackingLink.last_clicked_at = new Date();
     await this.trackingLinkRepository.save(trackingLink);
 
     return {
-      redirectUrl: trackingLink.product.product_url,
+      redirectUrl,
       trackingLinkId: trackingLink.id,
+      isMultiProduct: trackingLink.isMultiProduct(),
     };
   }
 
@@ -232,7 +410,7 @@ export class TrackingService {
   async getInfluencerLinks(influencerId: string): Promise<TrackingLink[]> {
     return await this.trackingLinkRepository.find({
       where: { influencer_id: influencerId },
-      relations: ['product'],
+      relations: ['product', 'link_products'],
       order: { created_at: 'DESC' },
     });
   }
@@ -241,7 +419,7 @@ export class TrackingService {
   async getTrackingLink(id: string, userId: string, userRole: UserRole): Promise<TrackingLink> {
     const trackingLink = await this.trackingLinkRepository.findOne({
       where: { id },
-      relations: ['product', 'influencer'],
+      relations: ['product', 'influencer', 'link_products'],
     });
 
     if (!trackingLink) {

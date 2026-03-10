@@ -4,6 +4,7 @@ import {
   Post,
   Body,
   Param,
+  Query,
   UseGuards,
   HttpCode,
   HttpStatus,
@@ -14,6 +15,8 @@ import {
 import { Request, Response } from 'express';
 import { TrackingService } from './tracking.service';
 import { CreateTrackingLinkDto } from './dto/create-tracking-link.dto';
+import { CreateAdvancedLinkDto } from './dto/create-advanced-link.dto';
+import { CheckSlugDto } from './dto/check-slug.dto';
 import { TrackConversionDto } from './dto/track-conversion.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
@@ -46,6 +49,83 @@ export class TrackingController {
       data: {
         ...trackingLink,
         tracking_url: trackingUrl,
+      },
+    };
+  }
+
+  // Generate advanced tracking link with custom slug, multi-product, QR code, etc.
+  @Post('tracking/links/advanced')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.INFLUENCER)
+  @HttpCode(HttpStatus.CREATED)
+  async generateAdvancedLink(
+    @Body() createDto: CreateAdvancedLinkDto,
+    @CurrentUser() user: User,
+  ) {
+    const baseUrl = process.env.APP_URL || 'http://localhost:3000';
+    const trackingLink = await this.trackingService.generateAdvancedTrackingLink(
+      createDto,
+      user,
+      baseUrl,
+    );
+
+    // Build the tracking URL (use custom slug if available)
+    const trackingUrl = trackingLink.getPublicUrl(`${baseUrl}/v1/track/c`);
+
+    return {
+      success: true,
+      data: {
+        ...trackingLink,
+        tracking_url: trackingUrl,
+      },
+    };
+  }
+
+  // Check if custom slug is available
+  @Get('tracking/slugs/check')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.INFLUENCER)
+  @HttpCode(HttpStatus.OK)
+  async checkSlugAvailability(@Query('slug') slug: string) {
+    if (!slug) {
+      return {
+        success: false,
+        message: 'Slug parameter is required',
+      };
+    }
+
+    const result = await this.trackingService.checkSlugAvailability(slug);
+
+    return {
+      success: true,
+      data: result,
+    };
+  }
+
+  // Generate QR code for existing tracking link
+  @Post('tracking/links/:id/qr-code')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.INFLUENCER)
+  @HttpCode(HttpStatus.OK)
+  async generateQRCode(@Param('id') linkId: string, @CurrentUser() user: User) {
+    if (!user.influencer) {
+      return {
+        success: false,
+        message: 'Influencer profile not found',
+      };
+    }
+
+    const baseUrl = process.env.APP_URL || 'http://localhost:3000';
+    const qrCodeDataUrl = await this.trackingService.generateQRCodeForLink(
+      linkId,
+      user.influencer.id,
+      `${baseUrl}/v1/track/c`,
+    );
+
+    return {
+      success: true,
+      data: {
+        qr_code_url: qrCodeDataUrl,
       },
     };
   }
@@ -98,6 +178,7 @@ export class TrackingController {
   @HttpCode(HttpStatus.FOUND)
   async trackClick(
     @Param('code') code: string,
+    @Query('product_id') productId: string,
     @Req() req: Request,
     @Res() res: Response,
   ) {
@@ -111,6 +192,7 @@ export class TrackingController {
         ipAddress,
         userAgent,
         referrer as string,
+        productId,
       );
 
       // Set cookie for attribution (30 days)
@@ -120,13 +202,22 @@ export class TrackingController {
         sameSite: 'lax',
       });
 
+      // If multi-product link and no product_id, show landing page instead of redirect
+      if (result.isMultiProduct && !productId) {
+        // TODO: Redirect to landing page
+        return res.status(400).json({
+          success: false,
+          message: 'Product ID required for multi-product links',
+        });
+      }
+
       // Redirect to product URL
       return res.redirect(result.redirectUrl);
     } catch (error) {
       // If tracking link not found, redirect to homepage or show error
       return res.status(404).json({
         success: false,
-        message: 'Tracking link not found',
+        message: error.message || 'Tracking link not found',
       });
     }
   }
@@ -136,6 +227,7 @@ export class TrackingController {
   @HttpCode(HttpStatus.OK)
   async trackClickApi(
     @Param('code') code: string,
+    @Body('product_id') productId: string,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
@@ -148,6 +240,7 @@ export class TrackingController {
       ipAddress,
       userAgent,
       referrer as string,
+      productId,
     );
 
     // Set cookie for attribution (30 days)
@@ -161,6 +254,7 @@ export class TrackingController {
       success: true,
       data: {
         redirect_url: result.redirectUrl,
+        is_multi_product: result.isMultiProduct,
       },
     };
   }

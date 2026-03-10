@@ -38,4 +38,11 @@ export class BrandDashboardDto {
     conversions: number;
     revenue: number;
   }>;
+
+  // Device type distribution
+  device_distribution?: Array<{
+    device_type: string;
+    clicks: number;
+    percentage: number;
+  }>;
 }

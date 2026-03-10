@@ -112,8 +112,16 @@ async function request<T = any>(config: AxiosRequestConfig): Promise<ApiResponse
   try {
     const response = await apiClient.request<ApiResponse<T>>(config)
     return response.data
-  } catch (error) {
-    throw error as ApiError
+  } catch (error: any) {
+    // Only log unexpected errors (not auth or client errors that are expected)
+    const status = error?.response?.status
+    const isExpectedError = status === 401 || status === 403 || status === 404
+
+    if (!isExpectedError) {
+      console.error('API Request Error:', error)
+    }
+
+    throw error
   }
 }
 

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Campaign Analytics Detail | InfluencerPlatform</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                        "slate": {
+                            50: "#f8fafc",
+                            100: "#f1f5f9",
+                            200: "#e2e8f0",
+                            300: "#cbd5e1",
+                            400: "#94a3b8",
+                            500: "#64748b",
+                            600: "#475569",
+                            700: "#334155",
+                            800: "#1e293b",
+                            900: "#0f172a",
+                        }
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Header Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-6">
+<span class="material-symbols-outlined text-3xl">deployed_code</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight">InfluencerPlatform</h2>
+</div>
+<label class="flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden border border-slate-200 dark:border-slate-700">
+<div class="text-slate-500 flex bg-slate-50 dark:bg-slate-800 items-center justify-center pl-4 pr-2">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-0 placeholder:text-slate-400 text-sm font-normal" placeholder="Search campaigns..." value=""/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-8">
+<a class="text-primary text-sm font-semibold leading-normal border-b-2 border-primary py-4 -mb-3" href="#">Campaigns</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Creators</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Analytics</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Messages</a>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-slate-200 dark:border-slate-700" data-alt="User profile avatar of an account manager" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCe49NQlH6fgCSkjdY0d048g1nKQ521smhmEZQ81VZGxUV7huJKT4-_27mUGbZIaryA6_0XV2_DEm_coDabb2YcaiUehczK7LPhtppS4rPC9gSNp3FsoqWuIsLNYGBVcEWvP0LoK9iY5ulZpplbW_1zXs-ZUmxKSgvIhraGB5VeLVPtBF2PdGeSwdK1LAUiZwZgz8PdpCZB4-l31csoxLhAJBTL-StiaCkEzeLaSoD_C0OCPxpigCPRY7HJnKYntKH3VcPq6MAxa_lx");'></div>
+</div>
+</header>
+<main class="max-w-[1280px] mx-auto w-full px-8 py-8 flex flex-col gap-6">
+<!-- Breadcrumbs and Title -->
+<div class="flex flex-col gap-4">
+<nav class="flex items-center gap-2 text-sm">
+<a class="text-slate-500 hover:text-primary transition-colors" href="#">Campaigns</a>
+<span class="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
+<span class="text-slate-900 dark:text-slate-100 font-medium">Summer Launch 2024</span>
+</nav>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<h1 class="text-slate-900 dark:text-slate-100 text-4xl font-black leading-tight tracking-[-0.033em]">Summer Launch 2024</h1>
+<span class="px-3 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-xs font-bold rounded-full uppercase tracking-wider">Active</span>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-lg h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm font-bold shadow-sm hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined mr-2 text-xl">share</span>
+                                Share Report
+                            </button>
+<button class="flex items-center justify-center rounded-lg h-10 px-6 bg-primary text-white text-sm font-bold shadow-md hover:opacity-90 transition-all">
+<span class="material-symbols-outlined mr-2 text-xl">edit</span>
+                                Edit Campaign
+                            </button>
+</div>
+</div>
+</div>
+<!-- Main Grid Layout -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Performance Breakdown (60%) -->
+<div class="col-span-12 lg:col-span-7 flex flex-col gap-6">
+<!-- Stat Overview -->
+<div class="grid grid-cols-3 gap-4">
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-xl">
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Total Reach</p>
+<p class="text-slate-900 dark:text-slate-100 text-2xl font-black">1.2M</p>
+<p class="text-green-600 text-xs font-medium mt-1 flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span>+12% vs last week
+                                </p>
+</div>
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-xl">
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Engagements</p>
+<p class="text-slate-900 dark:text-slate-100 text-2xl font-black">84.2K</p>
+<p class="text-green-600 text-xs font-medium mt-1 flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span>+5.4% vs last week
+                                </p>
+</div>
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-xl">
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Conversion Rate</p>
+<p class="text-slate-900 dark:text-slate-100 text-2xl font-black">3.8%</p>
+<p class="text-slate-500 text-xs font-medium mt-1">Goal: 4.0%</p>
+</div>
+</div>
+<!-- Charts Section -->
+<div class="flex flex-col gap-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm">
+<div class="flex items-center justify-between">
+<h3 class="text-slate-900 dark:text-slate-100 text-lg font-bold">Audience Demographics</h3>
+<button class="text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined">more_horiz</span></button>
+</div>
+<div class="flex items-end justify-between h-48 gap-4 px-4 pt-4 border-b border-slate-100 dark:border-slate-800">
+<div class="flex flex-col items-center flex-1 gap-4 h-full justify-end">
+<div class="bg-primary/20 w-full rounded-t-lg transition-all hover:bg-primary/30" style="height: 30%"></div>
+<span class="text-xs font-bold text-slate-500 pb-2">18-24</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-4 h-full justify-end">
+<div class="bg-primary w-full rounded-t-lg transition-all hover:opacity-90" style="height: 90%"></div>
+<span class="text-xs font-bold text-slate-500 pb-2">25-34</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-4 h-full justify-end">
+<div class="bg-primary/60 w-full rounded-t-lg transition-all" style="height: 65%"></div>
+<span class="text-xs font-bold text-slate-500 pb-2">35-44</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-4 h-full justify-end">
+<div class="bg-primary/40 w-full rounded-t-lg transition-all" style="height: 40%"></div>
+<span class="text-xs font-bold text-slate-500 pb-2">45-54</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-4 h-full justify-end">
+<div class="bg-primary/10 w-full rounded-t-lg transition-all" style="height: 15%"></div>
+<span class="text-xs font-bold text-slate-500 pb-2">55+</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm">
+<div class="flex items-center justify-between">
+<h3 class="text-slate-900 dark:text-slate-100 text-lg font-bold">Content Type Distribution</h3>
+<div class="flex gap-2">
+<span class="flex items-center gap-1 text-xs text-slate-500 font-medium">
+<div class="size-2 rounded-full bg-primary"></div> Posts
+                                    </span>
+<span class="flex items-center gap-1 text-xs text-slate-500 font-medium">
+<div class="size-2 rounded-full bg-slate-300"></div> Video
+                                    </span>
+</div>
+</div>
+<div class="grid grid-cols-4 gap-8 h-48 px-4 items-end">
+<div class="flex flex-col items-center gap-4 h-full justify-end">
+<div class="bg-primary w-full rounded-t-lg" style="height: 75%"></div>
+<span class="text-xs font-bold text-slate-500">Instagram</span>
+</div>
+<div class="flex flex-col items-center gap-4 h-full justify-end">
+<div class="bg-primary/80 w-full rounded-t-lg" style="height: 55%"></div>
+<span class="text-xs font-bold text-slate-500">TikTok</span>
+</div>
+<div class="flex flex-col items-center gap-4 h-full justify-end">
+<div class="bg-primary/40 w-full rounded-t-lg" style="height: 35%"></div>
+<span class="text-xs font-bold text-slate-500">YouTube</span>
+</div>
+<div class="flex flex-col items-center gap-4 h-full justify-end">
+<div class="bg-primary/20 w-full rounded-t-lg" style="height: 20%"></div>
+<span class="text-xs font-bold text-slate-500">Others</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Side Actions and Milestones (40%) -->
+<div class="col-span-12 lg:col-span-5 flex flex-col gap-6">
+<!-- Quick Actions -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl shadow-sm">
+<h3 class="text-slate-900 dark:text-slate-100 text-lg font-bold mb-4">Quick Actions</h3>
+<div class="flex flex-col gap-2">
+<button class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors border border-transparent hover:border-slate-100">
+<span class="material-symbols-outlined text-primary">mail</span>
+<span class="text-sm font-semibold">Message All Participants</span>
+</button>
+<button class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors border border-transparent hover:border-slate-100">
+<span class="material-symbols-outlined text-primary">download</span>
+<span class="text-sm font-semibold">Export Detailed Report</span>
+</button>
+<button class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors border border-transparent hover:border-slate-100">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+<span class="text-sm font-semibold">Edit Campaign Budget</span>
+</button>
+</div>
+</div>
+<!-- Campaign Milestones Timeline -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl shadow-sm">
+<h3 class="text-slate-900 dark:text-slate-100 text-lg font-bold mb-6">Campaign Milestones</h3>
+<div class="relative space-y-0">
+<!-- Line -->
+<div class="absolute left-3 top-2 bottom-2 w-0.5 bg-slate-100 dark:bg-slate-800"></div>
+<!-- Milestone 1 -->
+<div class="relative flex gap-4 pb-8 group">
+<div class="mt-1 size-6 rounded-full bg-green-500 border-4 border-white dark:border-slate-900 z-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[12px] font-bold">check</span>
+</div>
+<div class="flex-1">
+<p class="text-slate-900 dark:text-slate-100 text-sm font-bold">Campaign Launched</p>
+<p class="text-slate-500 text-xs">June 1, 2024 • 09:00 AM</p>
+<p class="text-slate-600 dark:text-slate-400 text-sm mt-1">Campaign went live with 45 creators approved.</p>
+</div>
+</div>
+<!-- Milestone 2 -->
+<div class="relative flex gap-4 pb-8">
+<div class="mt-1 size-6 rounded-full bg-green-500 border-4 border-white dark:border-slate-900 z-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[12px] font-bold">check</span>
+</div>
+<div class="flex-1">
+<p class="text-slate-900 dark:text-slate-100 text-sm font-bold">First Content Live</p>
+<p class="text-slate-500 text-xs">June 3, 2024 • 11:30 AM</p>
+<p class="text-slate-600 dark:text-slate-400 text-sm mt-1">Organic reach surpassed 100k in first 4 hours.</p>
+</div>
+</div>
+<!-- Milestone 3 -->
+<div class="relative flex gap-4 pb-8">
+<div class="mt-1 size-6 rounded-full bg-green-500 border-4 border-white dark:border-slate-900 z-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[12px] font-bold">check</span>
+</div>
+<div class="flex-1">
+<p class="text-slate-900 dark:text-slate-100 text-sm font-bold">50% Goal Reached</p>
+<p class="text-slate-500 text-xs">June 15, 2024 • 04:00 PM</p>
+<p class="text-slate-600 dark:text-slate-400 text-sm mt-1">Achieved 600k total reach target ahead of schedule.</p>
+</div>
+</div>
+<!-- Milestone 4 -->
+<div class="relative flex gap-4 pb-8">
+<div class="mt-1 size-6 rounded-full bg-primary border-4 border-white dark:border-slate-900 z-10 flex items-center justify-center">
+<div class="size-1.5 rounded-full bg-white"></div>
+</div>
+<div class="flex-1">
+<p class="text-primary text-sm font-bold">Mid-Campaign Review</p>
+<p class="text-slate-500 text-xs">June 20, 2024 • Scheduled</p>
+<p class="text-slate-600 dark:text-slate-400 text-sm mt-1">Team review of top performing assets and budget re-allocation.</p>
+</div>
+</div>
+<!-- Milestone 5 -->
+<div class="relative flex gap-4">
+<div class="mt-1 size-6 rounded-full bg-slate-200 dark:bg-slate-800 border-4 border-white dark:border-slate-900 z-10"></div>
+<div class="flex-1">
+<p class="text-slate-400 text-sm font-bold">Campaign Wrap-up</p>
+<p class="text-slate-400 text-xs">June 30, 2024 • Expected</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

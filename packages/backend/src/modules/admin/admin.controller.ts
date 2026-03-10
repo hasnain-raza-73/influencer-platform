@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Patch,
+  Delete,
   Param,
   Body,
   Query,
@@ -59,6 +60,13 @@ export class AdminController {
     return { success: true, data: brand };
   }
 
+  @Delete('brands/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteBrand(@Param('id') id: string) {
+    await this.adminService.deleteBrand(id);
+    return { success: true, message: 'Brand deleted successfully' };
+  }
+
   // ── Influencers ─────────────────────────────────────────────────────────────
 
   @Get('influencers')
@@ -88,6 +96,13 @@ export class AdminController {
   ) {
     const influencer = await this.adminService.updateInfluencerStatus(id, body.status);
     return { success: true, data: influencer };
+  }
+
+  @Delete('influencers/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteInfluencer(@Param('id') id: string) {
+    await this.adminService.deleteInfluencer(id);
+    return { success: true, message: 'Influencer deleted successfully' };
   }
 
   // ── Campaigns ──────────────────────────────────────────────────────────────

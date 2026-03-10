@@ -40,6 +40,10 @@ export const adminService = {
     await api.patch(`/admin/brands/${id}/status`, { status })
   },
 
+  async deleteBrand(id: string): Promise<void> {
+    await api.delete(`/admin/brands/${id}`)
+  },
+
   async getInfluencers(params?: { status?: string; search?: string; page?: number; limit?: number }): Promise<{ data: AdminInfluencer[]; meta: any }> {
     const r: any = await api.get('/admin/influencers', { params })
     return { data: r.data || [], meta: r.meta }
@@ -47,6 +51,10 @@ export const adminService = {
 
   async updateInfluencerStatus(id: string, status: 'ACTIVE' | 'SUSPENDED'): Promise<void> {
     await api.patch(`/admin/influencers/${id}/status`, { status })
+  },
+
+  async deleteInfluencer(id: string): Promise<void> {
+    await api.delete(`/admin/influencers/${id}`)
   },
 
   async getCampaigns(params?: { status?: string; brand_id?: string; page?: number; limit?: number }): Promise<{ data: Campaign[]; meta: any }> {
@@ -85,6 +93,11 @@ export const adminService = {
 
   async getInfluencerDetail(id: string): Promise<any> {
     const r: any = await api.get(`/admin/influencers/${id}`)
+    return r.data
+  },
+
+  async getPlatformAnalytics(params?: { preset?: string; start_date?: string; end_date?: string }): Promise<any> {
+    const r: any = await api.get('/analytics/admin/platform', { params })
     return r.data
   },
 }

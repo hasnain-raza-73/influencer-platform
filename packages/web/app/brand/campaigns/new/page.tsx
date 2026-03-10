@@ -6,7 +6,7 @@ import { useAuthStore } from '@/store/auth-store'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Target, ArrowLeft, Save, Calendar, DollarSign, Package, Search, X, Check } from 'lucide-react'
+import { Target, ArrowLeft, Save, Calendar, DollarSign, Package, Search, X, Check, Users, Globe } from 'lucide-react'
 import { campaignsService } from '@/services/campaigns-service'
 import { productsService } from '@/services/products-service'
 import { Product } from '@/types'
@@ -29,6 +29,9 @@ export default function NewCampaignPage() {
     budget: '',
     start_date: '',
     end_date: '',
+    campaign_type: 'OPEN' as 'OPEN' | 'SPECIFIC',
+    country: '',
+    currency: 'USD',
   })
 
   useEffect(() => {
@@ -110,6 +113,9 @@ export default function NewCampaignPage() {
         start_date: formData.start_date || undefined,
         end_date: formData.end_date || undefined,
         target_product_ids: selectedProductIds.length > 0 ? selectedProductIds : undefined,
+        campaign_type: formData.campaign_type,
+        country: formData.country || undefined,
+        currency: formData.currency,
       }
 
       await campaignsService.create(campaignData)
@@ -167,6 +173,75 @@ export default function NewCampaignPage() {
                 </div>
               )}
 
+              {/* Campaign Type Selector */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Campaign Type
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* OPEN Campaign */}
+                  <div
+                    onClick={() => handleChange('campaign_type', 'OPEN')}
+                    className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                      formData.campaign_type === 'OPEN'
+                        ? 'border-primary-500 bg-primary-50'
+                        : 'border-gray-200 bg-white hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center flex-shrink-0 ${
+                        formData.campaign_type === 'OPEN' ? 'border-primary-500 bg-primary-500' : 'border-gray-300'
+                      }`}>
+                        {formData.campaign_type === 'OPEN' && <div className="w-2 h-2 bg-white rounded-full" />}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Globe className="w-5 h-5 text-primary-600" />
+                          <span className="font-medium text-gray-900">Open Campaign</span>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          Visible to all influencers. Anyone can create tracking links and promote your products.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* SPECIFIC Campaign */}
+                  <div
+                    onClick={() => handleChange('campaign_type', 'SPECIFIC')}
+                    className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                      formData.campaign_type === 'SPECIFIC'
+                        ? 'border-primary-500 bg-primary-50'
+                        : 'border-gray-200 bg-white hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center flex-shrink-0 ${
+                        formData.campaign_type === 'SPECIFIC' ? 'border-primary-500 bg-primary-500' : 'border-gray-300'
+                      }`}>
+                        {formData.campaign_type === 'SPECIFIC' && <div className="w-2 h-2 bg-white rounded-full" />}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Users className="w-5 h-5 text-primary-600" />
+                          <span className="font-medium text-gray-900">Invitation-Only</span>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          Only invited influencers can participate. You choose who can promote your products.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {formData.campaign_type === 'SPECIFIC' && (
+                  <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className="text-sm text-blue-700">
+                      💡 You'll be able to invite specific influencers after creating the campaign.
+                    </p>
+                  </div>
+                )}
+              </div>
+
               <Input
                 label="Campaign Name"
                 type="text"
@@ -217,6 +292,139 @@ export default function NewCampaignPage() {
                   onChange={(e) => handleChange('budget', e.target.value)}
                   helperText="Total budget allocated for this campaign"
                 />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Country (Optional)
+                  </label>
+                  <select
+                    value={formData.country}
+                    onChange={(e) => handleChange('country', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white"
+                  >
+                    <option value="">Select Country</option>
+                    <option value="US">United States</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="CA">Canada</option>
+                    <option value="AU">Australia</option>
+                    <option value="DE">Germany</option>
+                    <option value="FR">France</option>
+                    <option value="ES">Spain</option>
+                    <option value="IT">Italy</option>
+                    <option value="NL">Netherlands</option>
+                    <option value="SE">Sweden</option>
+                    <option value="NO">Norway</option>
+                    <option value="DK">Denmark</option>
+                    <option value="FI">Finland</option>
+                    <option value="PL">Poland</option>
+                    <option value="CZ">Czech Republic</option>
+                    <option value="AT">Austria</option>
+                    <option value="CH">Switzerland</option>
+                    <option value="BE">Belgium</option>
+                    <option value="IE">Ireland</option>
+                    <option value="PT">Portugal</option>
+                    <option value="GR">Greece</option>
+                    <option value="TR">Turkey</option>
+                    <option value="RU">Russia</option>
+                    <option value="UA">Ukraine</option>
+                    <option value="RO">Romania</option>
+                    <option value="HU">Hungary</option>
+                    <option value="BG">Bulgaria</option>
+                    <option value="HR">Croatia</option>
+                    <option value="SI">Slovenia</option>
+                    <option value="SK">Slovakia</option>
+                    <option value="LT">Lithuania</option>
+                    <option value="LV">Latvia</option>
+                    <option value="EE">Estonia</option>
+                    <option value="JP">Japan</option>
+                    <option value="CN">China</option>
+                    <option value="IN">India</option>
+                    <option value="KR">South Korea</option>
+                    <option value="SG">Singapore</option>
+                    <option value="HK">Hong Kong</option>
+                    <option value="TW">Taiwan</option>
+                    <option value="TH">Thailand</option>
+                    <option value="MY">Malaysia</option>
+                    <option value="ID">Indonesia</option>
+                    <option value="PH">Philippines</option>
+                    <option value="VN">Vietnam</option>
+                    <option value="NZ">New Zealand</option>
+                    <option value="BR">Brazil</option>
+                    <option value="MX">Mexico</option>
+                    <option value="AR">Argentina</option>
+                    <option value="CL">Chile</option>
+                    <option value="CO">Colombia</option>
+                    <option value="PE">Peru</option>
+                    <option value="ZA">South Africa</option>
+                    <option value="NG">Nigeria</option>
+                    <option value="EG">Egypt</option>
+                    <option value="KE">Kenya</option>
+                    <option value="AE">United Arab Emirates</option>
+                    <option value="SA">Saudi Arabia</option>
+                    <option value="IL">Israel</option>
+                    <option value="PK">Pakistan</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1.5">Target market for this campaign</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Currency
+                  </label>
+                  <select
+                    value={formData.currency}
+                    onChange={(e) => handleChange('currency', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white"
+                  >
+                    <option value="USD">USD - US Dollar</option>
+                    <option value="EUR">EUR - Euro</option>
+                    <option value="GBP">GBP - British Pound</option>
+                    <option value="CAD">CAD - Canadian Dollar</option>
+                    <option value="AUD">AUD - Australian Dollar</option>
+                    <option value="JPY">JPY - Japanese Yen</option>
+                    <option value="CNY">CNY - Chinese Yuan</option>
+                    <option value="INR">INR - Indian Rupee</option>
+                    <option value="CHF">CHF - Swiss Franc</option>
+                    <option value="SEK">SEK - Swedish Krona</option>
+                    <option value="NOK">NOK - Norwegian Krone</option>
+                    <option value="DKK">DKK - Danish Krone</option>
+                    <option value="PLN">PLN - Polish Zloty</option>
+                    <option value="CZK">CZK - Czech Koruna</option>
+                    <option value="HUF">HUF - Hungarian Forint</option>
+                    <option value="RON">RON - Romanian Leu</option>
+                    <option value="BGN">BGN - Bulgarian Lev</option>
+                    <option value="HRK">HRK - Croatian Kuna</option>
+                    <option value="RUB">RUB - Russian Ruble</option>
+                    <option value="TRY">TRY - Turkish Lira</option>
+                    <option value="BRL">BRL - Brazilian Real</option>
+                    <option value="MXN">MXN - Mexican Peso</option>
+                    <option value="ARS">ARS - Argentine Peso</option>
+                    <option value="CLP">CLP - Chilean Peso</option>
+                    <option value="COP">COP - Colombian Peso</option>
+                    <option value="PEN">PEN - Peruvian Sol</option>
+                    <option value="ZAR">ZAR - South African Rand</option>
+                    <option value="NGN">NGN - Nigerian Naira</option>
+                    <option value="EGP">EGP - Egyptian Pound</option>
+                    <option value="KES">KES - Kenyan Shilling</option>
+                    <option value="AED">AED - UAE Dirham</option>
+                    <option value="SAR">SAR - Saudi Riyal</option>
+                    <option value="ILS">ILS - Israeli Shekel</option>
+                    <option value="KRW">KRW - South Korean Won</option>
+                    <option value="SGD">SGD - Singapore Dollar</option>
+                    <option value="HKD">HKD - Hong Kong Dollar</option>
+                    <option value="TWD">TWD - Taiwan Dollar</option>
+                    <option value="THB">THB - Thai Baht</option>
+                    <option value="MYR">MYR - Malaysian Ringgit</option>
+                    <option value="IDR">IDR - Indonesian Rupiah</option>
+                    <option value="PHP">PHP - Philippine Peso</option>
+                    <option value="VND">VND - Vietnamese Dong</option>
+                    <option value="NZD">NZD - New Zealand Dollar</option>
+                    <option value="PKR">PKR - Pakistani Rupee</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1.5">Budget and payout currency</p>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

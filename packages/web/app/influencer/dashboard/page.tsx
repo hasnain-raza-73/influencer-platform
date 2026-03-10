@@ -22,6 +22,8 @@ import { analyticsService, InfluencerDashboardResponse } from '@/services/analyt
 import { campaignsService } from '@/services/campaigns-service'
 import { trackingService } from '@/services/tracking-service'
 import { payoutsService, AvailableBalanceResponse } from '@/services/payouts-service'
+import { socialIntegrationsService, SocialAccount } from '@/services/social-integrations-service'
+import { SocialMetricsCard } from '@/components/social/SocialMetricsCard'
 import { Campaign, TrackingLink } from '@/types'
 
 export default function InfluencerDashboard() {
@@ -32,6 +34,7 @@ export default function InfluencerDashboard() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([])
   const [trackingLinks, setTrackingLinks] = useState<TrackingLink[]>([])
   const [balance, setBalance] = useState<AvailableBalanceResponse | null>(null)
+  const [socialAccounts, setSocialAccounts] = useState<SocialAccount[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -50,11 +53,12 @@ export default function InfluencerDashboard() {
       setError('')
 
       // Load all dashboard data in parallel
-      const [dashboardRes, campaignsRes, trackingRes, balanceRes] = await Promise.all([
+      const [dashboardRes, campaignsRes, trackingRes, balanceRes, socialAccountsRes] = await Promise.all([
         analyticsService.getInfluencerDashboard().catch(() => null),
         campaignsService.getActiveCampaigns({ limit: 5 }).catch(() => []),
         trackingService.getAll({ limit: 5 }).catch(() => []),
         payoutsService.getAvailableBalance().catch(() => null),
+        socialIntegrationsService.getAccounts().catch(() => ({ success: false, data: [] })),
       ])
 
       if (dashboardRes) {
@@ -64,6 +68,9 @@ export default function InfluencerDashboard() {
       setTrackingLinks(trackingRes)
       if (balanceRes) {
         setBalance(balanceRes)
+      }
+      if (socialAccountsRes?.data) {
+        setSocialAccounts(socialAccountsRes.data)
       }
     } catch (err: any) {
       console.error('Error loading dashboard:', err)
@@ -229,6 +236,11 @@ export default function InfluencerDashboard() {
             </Button>
           </CardContent>
         </Card>
+
+        {/* Social Media Presence */}
+        {socialAccounts.length > 0 && (
+          <SocialMetricsCard accounts={socialAccounts} compact className="mb-8" />
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Active Campaigns */}

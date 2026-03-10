@@ -11,7 +11,7 @@
 
 After following this guide, you'll have:
 
-✅ **Live Backend API** at `https://your-app-xyz123.up.railway.app/v1`
+✅ **Live Backend API** at `https://influencer-platform-backend.onrender.com/v1`
 ✅ **Live Frontend** at `https://your-app.vercel.app`
 ✅ **Production Database** (PostgreSQL on Supabase)
 ✅ **Image Hosting** (Cloudinary)
@@ -155,77 +155,130 @@ If you don't have `psql` installed, skip this — we'll verify after deployment.
 
 ---
 
-## Phase 3: Backend Deployment — Railway (FREE)
+## Phase 2.5: OAuth Integration Setup (OPTIONAL for MVP)
 
-### Why Railway?
-- Easiest to deploy NestJS apps
-- Free tier: $5 credit/month (renews monthly)
-- Auto-deploy on Git push
-- No credit card required
+### Social Media Integration for Influencers
 
-### Step 3.1: Create Railway Account
+Your platform supports OAuth integration with Instagram, Facebook, and TikTok, allowing influencers to:
+- ✅ Connect and verify their social media accounts
+- ✅ Automatically sync follower counts and engagement metrics
+- ✅ Display verified badges to brands
+- ✅ Build trust through authenticated social profiles
 
-1. Go to **https://railway.app**
-2. Click **"Start a New Project"**
-3. Sign up with GitHub (click "Login with GitHub")
-4. Authorize Railway to access your repositories
+### Quick Setup Guide
 
-### Step 3.2: Deploy Backend
+**Option 1: Skip for initial MVP** (Recommended for first deployment)
+- OAuth requires creating developer apps on each platform
+- Can take 2-5 business days for app review/approval
+- You can deploy your MVP first and add OAuth later
 
-#### Option A: Deploy from GitHub (Recommended)
+**Option 2: Set up OAuth now**
+- Follow the comprehensive guide: **`OAUTH_SETUP.md`**
+- Complete setup for:
+  - Instagram Basic Display API
+  - Facebook Login
+  - TikTok Login Kit
+- Add OAuth credentials to environment variables (shown in Step 3.4)
 
-1. Push your code to GitHub first:
-   ```bash
-   cd /Users/hasnainraza/Desktop/My\ Stores/influencer-platform
+### OAuth Environment Variables
 
-   # Initialize git if not already done
-   git init
-   git add .
-   git commit -m "Initial commit"
-
-   # Create GitHub repo (via GitHub website) then:
-   git remote add origin https://github.com/YOUR-USERNAME/influencer-platform.git
-   git push -u origin main
-   ```
-
-2. In Railway dashboard:
-   - Click **"New Project"**
-   - Click **"Deploy from GitHub repo"**
-   - Select your `influencer-platform` repository
-   - Railway will auto-detect it's a monorepo
-
-3. Configure build settings:
-   - Click on the service that was created
-   - Go to **Settings** tab
-   - Set **Root Directory**: `packages/backend`
-   - Set **Build Command**: `npm install && npm run build`
-   - Set **Start Command**: `npm run start:prod`
-   - Click **"Save"**
-
-#### Option B: Deploy using Railway CLI (Alternative)
+If setting up OAuth, you'll need these additional credentials:
 
 ```bash
-# Install Railway CLI
-npm install -g @railway/cli
+# Instagram OAuth
+INSTAGRAM_CLIENT_ID=your-instagram-app-id
+INSTAGRAM_CLIENT_SECRET=your-instagram-app-secret
+INSTAGRAM_REDIRECT_URI=https://your-backend.onrender.com/v1/oauth/instagram/callback
 
-# Login
-railway login
+# Facebook OAuth
+FACEBOOK_APP_ID=your-facebook-app-id
+FACEBOOK_APP_SECRET=your-facebook-app-secret
+FACEBOOK_REDIRECT_URI=https://your-backend.onrender.com/v1/oauth/facebook/callback
 
-# Navigate to backend
-cd packages/backend
-
-# Initialize Railway project
-railway init
-
-# Deploy
-railway up
+# TikTok OAuth
+TIKTOK_CLIENT_KEY=your-tiktok-client-key
+TIKTOK_CLIENT_SECRET=your-tiktok-client-secret
+TIKTOK_REDIRECT_URI=https://your-backend.onrender.com/v1/oauth/tiktok/callback
 ```
 
-### Step 3.3: Add Environment Variables
+**Detailed Setup Instructions**: See **`OAUTH_SETUP.md`** for step-by-step guide.
 
-1. In Railway dashboard, click your service
-2. Go to **Variables** tab
-3. Click **"New Variable"** and add these one by one:
+**Note**: OAuth credentials are marked as optional in the environment variables. The app will work without them, but influencers won't be able to connect their social accounts until OAuth is configured.
+
+---
+
+## Phase 3: Backend Deployment — Render.com (100% FREE) or Railway ($5/month)
+
+### ⚠️ Railway Pricing Update (2025)
+Railway **no longer has a free tier**. You get a 29-day trial OR $5 credit, then must add payment method (~$5-10/month for small apps).
+
+### Recommended: Use Render.com Instead (TRUE FREE TIER)
+- **100% free forever** (no credit card required)
+- 750 hours/month free (= 24/7 uptime for 1 service)
+- Auto-deploy on Git push
+- Easy Node.js deployment
+
+### Alternative: Railway (~$5/month after trial)
+If you prefer Railway's easier interface, see PRODUCTION.md for Railway setup. This guide uses **Render** for completely free deployment.
+
+### Step 3.1: Create Render Account
+
+1. Go to **https://render.com**
+2. Click **"Get Started"** (top right)
+3. Click **"Sign up with GitHub"**
+4. Authorize Render to access your repositories
+
+### Step 3.2: Push Code to GitHub (Required)
+
+Render deploys from GitHub, so push your code first:
+
+```bash
+cd /Users/hasnainraza/Desktop/My\ Stores/influencer-platform
+
+# Initialize git if not already done
+git init
+git add .
+git commit -m "Initial commit - ready for deployment"
+
+# Create GitHub repo at https://github.com/new
+# Name it: influencer-platform
+# Then add remote and push:
+git remote add origin https://github.com/YOUR-USERNAME/influencer-platform.git
+git branch -M main
+git push -u origin main
+```
+
+### Step 3.3: Deploy Backend to Render
+
+1. In Render dashboard, click **"New +"** → **"Web Service"**
+
+2. Connect your GitHub repository:
+   - Click **"Connect a repository"**
+   - Select **`influencer-platform`**
+   - Click **"Connect"**
+
+3. Configure the service:
+   ```
+   Name:              influencer-platform-backend
+   Region:            Choose closest to you (Oregon/Frankfurt/Singapore)
+   Branch:            main
+   Root Directory:    packages/backend
+   Runtime:           Node
+   Build Command:     npm install && npm run build
+   Start Command:     npm run start:prod
+   Instance Type:     Free
+   ```
+
+4. Click **"Advanced"** and add environment variables (see next step)
+
+5. Click **"Create Web Service"** (don't deploy yet - add env vars first)
+
+### Step 3.4: Add Environment Variables
+
+Before deployment completes, add all environment variables:
+
+1. In Render, while still on the service creation page, scroll to **"Environment Variables"**
+2. Click **"Add Environment Variable"** for each of these:
 
 ```bash
 # Database (from Supabase Step 1.3)
@@ -247,6 +300,21 @@ CLOUDINARY_CLOUD_NAME=dxyz123abc
 CLOUDINARY_API_KEY=123456789012345
 CLOUDINARY_API_SECRET=your-cloudinary-secret-here
 
+# OAuth - Social Media Integration (Optional for MVP - see OAUTH_SETUP.md)
+INSTAGRAM_CLIENT_ID=your-instagram-app-id
+INSTAGRAM_CLIENT_SECRET=your-instagram-app-secret
+INSTAGRAM_REDIRECT_URI=https://your-backend.onrender.com/v1/oauth/instagram/callback
+
+FACEBOOK_APP_ID=your-facebook-app-id
+FACEBOOK_APP_SECRET=your-facebook-app-secret
+FACEBOOK_REDIRECT_URI=https://your-backend.onrender.com/v1/oauth/facebook/callback
+
+TIKTOK_CLIENT_KEY=your-tiktok-client-key
+TIKTOK_CLIENT_SECRET=your-tiktok-client-secret
+TIKTOK_REDIRECT_URI=https://your-backend.onrender.com/v1/oauth/tiktok/callback
+
+FRONTEND_URL=https://your-app.vercel.app
+
 # Server
 PORT=3000
 NODE_ENV=production
@@ -262,58 +330,63 @@ openssl rand -base64 64
 
 **For CORS_ORIGIN**: We'll update this after deploying frontend (Step 4)
 
-4. Click **"Deploy"** (or it auto-deploys on variable save)
+3. After adding all variables, scroll up and click **"Create Web Service"**
 
-### Step 3.4: Get Backend URL
+Render will now:
+- Clone your repository
+- Install dependencies
+- Build your NestJS app
+- Deploy it
 
-1. In Railway dashboard, click your service
-2. Go to **Settings** tab
-3. Scroll to **Networking** section
-4. Click **"Generate Domain"**
-5. Railway will give you a URL like:
+This takes ~3-5 minutes. ☕
+
+### Step 3.5: Get Backend URL
+
+Once deployment completes:
+
+1. Render automatically gives you a URL at the top of the page:
    ```
-   https://influencer-platform-production-abc123.up.railway.app
+   https://influencer-platform-backend.onrender.com
    ```
 
-6. **Your backend API is now at**:
+2. **Your backend API is now at**:
    ```
-   https://influencer-platform-production-abc123.up.railway.app/v1
+   https://influencer-platform-backend.onrender.com/v1
    ```
 
-### Step 3.5: Run Database Migrations
+**Save this URL** - you'll need it for frontend setup!
 
-#### Method 1: Using Railway CLI
-```bash
-cd packages/backend
+### Step 3.6: Run Database Migrations
 
-# Connect to Railway project
-railway link
+Render doesn't have a CLI for running commands, so we'll add migrations to the start command:
 
-# Run migrations
-railway run npm run migration:run
-
-# Seed admin user
-railway run npm run seed:admin
-```
-
-#### Method 2: Add migration to start command
-1. In Railway → Settings → Start Command, change to:
+1. In Render dashboard → Your service → **Settings**
+2. Find **"Start Command"**
+3. Click **"Edit"** and change to:
    ```bash
    npm run migration:run && npm run seed:admin && npm run start:prod
    ```
-2. Save — Railway will redeploy and run migrations automatically
+4. Click **"Save Changes"**
+5. Render will redeploy (takes ~2 minutes)
 
-### Step 3.6: Verify Backend is Running
+This will:
+- Run all database migrations
+- Create the admin user
+- Start the API server
+
+### Step 3.7: Verify Backend is Running
 
 ```bash
-# Test health endpoint (replace with your URL)
-curl https://influencer-platform-production-abc123.up.railway.app/v1/health
+# Test health endpoint (replace with YOUR URL)
+curl https://influencer-platform-backend.onrender.com/v1/health
 
 # Should return:
-# {"status":"ok"}
+# {"status":"ok","timestamp":"2026-02-24T..."}
 ```
 
 ✅ **Backend is live!** Save your backend URL for frontend setup.
+
+**Note**: Render free tier services sleep after 15 minutes of inactivity. First request after sleep takes ~30 seconds to wake up. This is normal for the free tier!
 
 ---
 
@@ -350,9 +423,9 @@ curl https://influencer-platform-production-abc123.up.railway.app/v1/health
    - Add this variable:
      ```
      Key:   NEXT_PUBLIC_API_URL
-     Value: https://influencer-platform-production-abc123.up.railway.app/v1
+     Value: https://influencer-platform-backend.onrender.com/v1
      ```
-     *(Use YOUR backend URL from Step 3.4)*
+     *(Use YOUR backend URL from Step 3.5)*
 
 4. Click **"Deploy"**
 
@@ -383,15 +456,15 @@ Preview:    https://influencer-platform-git-main.vercel.app
 
 Now that you have your frontend URL, update backend CORS:
 
-1. Go back to **Railway dashboard**
+1. Go back to **Render dashboard**
 2. Click your backend service
-3. Go to **Variables** tab
+3. Go to **Environment** (left sidebar)
 4. Find `CORS_ORIGIN` variable
-5. Update it to your Vercel URL:
+5. Click **"Edit"** and update it to your Vercel URL:
    ```
    CORS_ORIGIN=https://influencer-platform.vercel.app
    ```
-6. Save (Railway will auto-redeploy)
+6. Click **"Save Changes"** (Render will auto-redeploy in ~2 min)
 
 ### Step 5.2: Verify Everything Works
 
@@ -409,13 +482,13 @@ Now that you have your frontend URL, update backend CORS:
 
 ## Phase 6: Enable Auto-Deploy (CI/CD)
 
-### For Backend (Railway)
+### For Backend (Render)
 
 **Already enabled!** Every push to `main` branch auto-deploys.
 
 To verify:
-1. Railway dashboard → Your service → Deployments tab
-2. You'll see "Deploy on push" is enabled
+1. Render dashboard → Your service → **Events** tab
+2. You'll see automatic deployments on every git push
 
 ### For Frontend (Vercel)
 
@@ -433,7 +506,9 @@ git add .
 git commit -m "Add new feature"
 git push origin main
 
-# Both Railway and Vercel will auto-deploy!
+# Both Render and Vercel will auto-deploy!
+# Render: ~3-5 minutes
+# Vercel: ~2-3 minutes
 ```
 
 ---
@@ -445,7 +520,7 @@ After completing all steps, save these URLs:
 | Service | URL | Purpose |
 |---------|-----|---------|
 | **Frontend** | `https://influencer-platform.vercel.app` | Main app |
-| **Backend API** | `https://your-app-abc123.up.railway.app/v1` | API endpoints |
+| **Backend API** | `https://influencer-platform-backend.onrender.com/v1` | API endpoints |
 | **Database** | `aws-0-us-east-1.pooler.supabase.com` | PostgreSQL |
 | **Images** | `https://res.cloudinary.com/your-cloud/...` | CDN |
 
@@ -492,10 +567,11 @@ Password: Admin@123456!
 - **When exceeded**: Upgrade to pay-as-you-go (~$0.10/GB)
 - **Monitor**: Cloudinary Console → Analytics
 
-### Railway (Backend)
-- **Free**: $5 credit/month
-- **When exceeded**: App sleeps, or upgrade to Hobby ($5/month)
-- **Monitor**: Railway Dashboard → Usage
+### Render (Backend)
+- **Free**: 750 hours/month (enough for 24/7 uptime for 1 service)
+- **Limitation**: App sleeps after 15 min inactivity (wakes on first request ~30sec)
+- **When exceeded**: Upgrade to Starter ($7/month for always-on)
+- **Monitor**: Render Dashboard → Usage
 
 ### Vercel (Frontend)
 - **Free**: 100 GB bandwidth/month
@@ -514,29 +590,27 @@ Password: Admin@123456!
 
 ### Issue 1: "Cannot connect to database"
 
-**Check Railway logs**:
-```bash
-railway logs
-```
+**Check Render logs**:
+1. Go to Render dashboard → Your backend service
+2. Click **"Logs"** tab (live tail)
+3. Look for database connection errors
 
 **Common fixes**:
-- Verify `DATABASE_HOST` is correct (check for typos)
+- Verify `DATABASE_HOST` is correct (check for typos in Render Environment variables)
 - Verify `DATABASE_PASSWORD` matches Supabase password
 - Verify `DATABASE_SSL=true` is set
 - Check Supabase project is not paused (free tier pauses after 7 days inactivity)
 
-**Test connection manually**:
-```bash
-railway run npx prisma db pull
-# If this works, connection is fine
-```
+**Test connection**:
+1. Check Render logs for PostgreSQL connection errors
+2. Verify all DATABASE_* variables are set correctly in Render → Environment
 
 ### Issue 2: "CORS error" in browser console
 
 **Check backend CORS setting**:
-```bash
-railway variables get CORS_ORIGIN
-```
+1. Go to Render dashboard → Your backend service
+2. Click **"Environment"** (left sidebar)
+3. Find `CORS_ORIGIN` variable
 
 **Should match frontend URL exactly**:
 ```
@@ -546,9 +620,9 @@ railway variables get CORS_ORIGIN
 ```
 
 **Fix**:
-```bash
-railway variables set CORS_ORIGIN=https://influencer-platform.vercel.app
-```
+1. In Render → Environment, edit `CORS_ORIGIN`
+2. Set to: `https://influencer-platform.vercel.app`
+3. Save Changes (triggers redeploy)
 
 ### Issue 3: Frontend shows "Loading..." forever
 
@@ -556,36 +630,36 @@ railway variables set CORS_ORIGIN=https://influencer-platform.vercel.app
 
 **Common causes**:
 - API URL is wrong (check `NEXT_PUBLIC_API_URL` in Vercel)
-- Backend is down (test backend health endpoint)
+- Backend is sleeping (Render free tier sleeps after 15 min - first request takes ~30sec)
 - CORS not configured
 
 **Fix**:
-1. Verify backend is running: `curl https://your-backend.railway.app/v1/health`
-2. Check Vercel environment variable: `NEXT_PUBLIC_API_URL`
-3. Redeploy frontend: Vercel dashboard → Deployments → Redeploy
+1. Verify backend is running: `curl https://influencer-platform-backend.onrender.com/v1/health`
+2. If slow response, wait 30 seconds for Render to wake up
+3. Check Vercel environment variable: `NEXT_PUBLIC_API_URL`
+4. Redeploy frontend: Vercel dashboard → Deployments → Redeploy
 
 ### Issue 4: "Admin not found" when logging in
 
 **Migrations didn't run or seed script failed**
 
 **Fix**:
-```bash
-# Using Railway CLI
-railway link
-railway run npm run migration:run
-railway run npm run seed:admin
-
-# Or add to Railway start command:
-# npm run migration:run && npm run seed:admin && npm run start:prod
-```
+1. Check Render logs to see if migrations ran successfully
+2. Make sure Start Command includes migrations:
+   ```bash
+   npm run migration:run && npm run seed:admin && npm run start:prod
+   ```
+3. Go to Render → Settings → Start Command → Edit
+4. Save and redeploy
 
 ### Issue 5: Images not uploading
 
-**Check Cloudinary credentials**:
-```bash
-railway variables get CLOUDINARY_API_KEY
-railway variables get CLOUDINARY_API_SECRET
-```
+**Check Cloudinary credentials in Render**:
+1. Go to Render → Environment
+2. Verify these variables exist:
+   - `CLOUDINARY_CLOUD_NAME`
+   - `CLOUDINARY_API_KEY`
+   - `CLOUDINARY_API_SECRET`
 
 **Test upload manually**:
 ```bash
@@ -593,7 +667,7 @@ railway variables get CLOUDINARY_API_SECRET
 TOKEN="your-jwt-token"
 
 # Test upload
-curl -X POST https://your-backend.railway.app/v1/upload/image \
+curl -X POST https://influencer-platform-backend.onrender.com/v1/upload/image \
   -H "Authorization: Bearer $TOKEN" \
   -F "file=@/path/to/test.jpg"
 ```
@@ -605,16 +679,15 @@ curl -X POST https://your-backend.railway.app/v1/upload/image \
 
 ### Issue 6: Backend keeps restarting
 
-**Check Railway logs**:
-```bash
-railway logs --tail 100
-```
+**Check Render logs**:
+1. Render dashboard → Your service → **Logs** tab
+2. Look for error messages in the build or runtime logs
 
 **Common causes**:
-- Missing environment variable
-- Database migration failed
-- Out of memory (upgrade Railway plan)
-- Syntax error in code
+- Missing environment variable (check Render → Environment)
+- Database migration failed (check logs for SQL errors)
+- Out of memory (unlikely on free tier, but check logs)
+- Syntax error in code (check build logs)
 
 ---
 
@@ -627,13 +700,13 @@ railway logs --tail 100
   - Active connections: Database → Connection pooling
   - Logs: Logs Explorer
 
-### Railway Dashboard
-- **URL**: https://railway.app/project/your-project-id
+### Render Dashboard
+- **URL**: https://dashboard.render.com/web/your-service-id
 - **Check**:
-  - Deployments: Deployments tab
-  - Logs: Logs tab (real-time)
-  - Usage: Usage tab (credit consumption)
-  - Metrics: Metrics tab (CPU, memory, network)
+  - Deployments: **Events** tab (deployment history)
+  - Logs: **Logs** tab (real-time tail)
+  - Usage: **Metrics** tab (requests, response times)
+  - Health: Check if service shows "Live" status
 
 ### Vercel Dashboard
 - **URL**: https://vercel.com/your-username/influencer-platform
@@ -678,11 +751,11 @@ Once MVP is validated:
 
 1. **Add Custom Domain** (requires domain purchase)
    - Vercel: yourapp.com
-   - Railway: api.yourapp.com
+   - Render: api.yourapp.com
 
 2. **Upgrade Services** (as needed)
    - Supabase Pro: $25/month (8 GB database)
-   - Railway Hobby: $5/month (no sleep)
+   - Render Starter: $7/month (always-on, no sleep)
    - Vercel Pro: $20/month (1 TB bandwidth)
 
 3. **Add Monitoring**
@@ -692,12 +765,12 @@ Once MVP is validated:
 
 4. **Optimize**
    - Enable Vercel Analytics
-   - Add Redis caching (Railway add-on)
+   - Add Redis caching (separate service or Upstash)
    - Enable Cloudinary optimizations
 
 5. **Scale**
    - Move to Supabase Pro
-   - Enable Railway auto-scaling
+   - Upgrade Render to Starter plan
    - Add CDN for API (Cloudflare)
 
 ---
@@ -707,8 +780,8 @@ Once MVP is validated:
 | Users | Monthly Cost |
 |-------|--------------|
 | 0-1,000 | **$0** (all free tiers) |
-| 1,000-5,000 | **$30** (Supabase Pro + Railway Hobby) |
-| 5,000-10,000 | **$75** (+ Vercel Pro + Cloudinary pay-as-you-go) |
+| 1,000-5,000 | **$32** (Supabase Pro $25 + Render Starter $7) |
+| 5,000-10,000 | **$72** (+ Vercel Pro $20 + Cloudinary pay-as-you-go) |
 | 10,000+ | **$150+** (scale all services) |
 
 ---
@@ -745,7 +818,7 @@ Cloudinary stores images permanently. To backup:
 
 ## Security Checklist for MVP
 
-- [x] HTTPS enabled (automatic with Railway + Vercel)
+- [x] HTTPS enabled (automatic with Render + Vercel)
 - [x] JWT secrets are different from development
 - [x] Database not publicly accessible (Supabase handles this)
 - [x] CORS configured correctly (only your frontend can call API)
@@ -765,21 +838,29 @@ Cloudinary stores images permanently. To backup:
 
 # 2. Create Cloudinary account → Get CLOUDINARY_* credentials
 
-# 3. Deploy backend to Railway
-cd packages/backend
-railway init
-railway variables set DATABASE_HOST=...
-railway variables set DATABASE_PASSWORD=...
-railway variables set CLOUDINARY_CLOUD_NAME=...
-railway up
+# 3. Push code to GitHub
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/YOUR-USERNAME/influencer-platform.git
+git push -u origin main
+
+# 4. Deploy backend to Render
+# - Go to render.com → New Web Service
+# - Connect GitHub repo
+# - Set root directory: packages/backend
+# - Add all environment variables
+# - Deploy
 
 # 4. Deploy frontend to Vercel
 cd packages/web
 vercel --prod
 # Add NEXT_PUBLIC_API_URL in Vercel dashboard
 
-# 5. Update CORS in Railway
-railway variables set CORS_ORIGIN=https://your-app.vercel.app
+# 5. Update CORS in Render
+# - Render dashboard → Environment
+# - Edit CORS_ORIGIN = https://your-app.vercel.app
+# - Save Changes
 
 # 6. Test!
 # Open: https://your-app.vercel.app
@@ -795,7 +876,7 @@ railway variables set CORS_ORIGIN=https://your-app.vercel.app
 ## Support Resources
 
 - **Supabase Docs**: https://supabase.com/docs
-- **Railway Docs**: https://docs.railway.app
+- **Render Docs**: https://render.com/docs
 - **Vercel Docs**: https://vercel.com/docs
 - **Cloudinary Docs**: https://cloudinary.com/documentation
 - **Your Project Docs**: `ENVIRONMENT_SETUP.md`, `CURRENT_PROGRESS.md`
