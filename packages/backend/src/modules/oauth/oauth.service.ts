@@ -43,6 +43,10 @@ export class OAuthService {
     const clientId = this.configService.get<string>('INSTAGRAM_CLIENT_ID');
     const redirectUri = this.configService.get<string>('INSTAGRAM_REDIRECT_URI');
 
+    if (!clientId || !redirectUri) {
+      throw new BadRequestException('Instagram OAuth not configured. Please set INSTAGRAM_CLIENT_ID and INSTAGRAM_REDIRECT_URI environment variables.');
+    }
+
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: redirectUri,
@@ -58,6 +62,10 @@ export class OAuthService {
     const clientId = this.configService.get<string>('INSTAGRAM_CLIENT_ID');
     const clientSecret = this.configService.get<string>('INSTAGRAM_CLIENT_SECRET');
     const redirectUri = this.configService.get<string>('INSTAGRAM_REDIRECT_URI');
+
+    if (!clientId || !clientSecret || !redirectUri) {
+      throw new BadRequestException('Instagram OAuth not configured');
+    }
 
     try {
       const response = await axios.post(
@@ -138,6 +146,10 @@ export class OAuthService {
     const appId = this.configService.get<string>('FACEBOOK_APP_ID');
     const redirectUri = this.configService.get<string>('FACEBOOK_REDIRECT_URI');
 
+    if (!appId || !redirectUri) {
+      throw new BadRequestException('Facebook OAuth not configured. Please set FACEBOOK_APP_ID and FACEBOOK_REDIRECT_URI environment variables.');
+    }
+
     const params = new URLSearchParams({
       client_id: appId,
       redirect_uri: redirectUri,
@@ -212,6 +224,10 @@ export class OAuthService {
   getTikTokAuthUrl(state: string): string {
     const clientKey = this.configService.get<string>('TIKTOK_CLIENT_KEY');
     const redirectUri = this.configService.get<string>('TIKTOK_REDIRECT_URI');
+
+    if (!clientKey || !redirectUri) {
+      throw new BadRequestException('TikTok OAuth not configured. Please set TIKTOK_CLIENT_KEY and TIKTOK_REDIRECT_URI environment variables.');
+    }
 
     const params = new URLSearchParams({
       client_key: clientKey,
